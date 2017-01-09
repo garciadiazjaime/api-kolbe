@@ -170,16 +170,44 @@ module.exports =
 	});
 
 	router.post('/', function (req, res) {
-	  res.json({
-	    status: true,
-	    data: 'location post'
+	  locationController.saveLocation(req.body).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
 	  });
 	});
 
-	router.put('/', function (req, res) {
-	  res.json({
-	    status: true,
-	    data: 'location post'
+	router.put('/:locationId', function (req, res) {
+	  locationController.updateLocation(req.params.locationId, req.body).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
+	  });
+	});
+
+	router.delete('/:locationId', function (req, res) {
+	  locationController.deleteLocation(req.params.locationId, req.body).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
 	  });
 	});
 
@@ -201,6 +229,10 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
+	var _lodash = __webpack_require__(8);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -210,6 +242,7 @@ module.exports =
 	    _classCallCheck(this, LocationController);
 
 	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'location';
 	  }
 
 	  _createClass(LocationController, [{
@@ -217,8 +250,11 @@ module.exports =
 	    value: function getLocations() {
 	      var _this = this;
 
+	      var filter = {
+	        status: true
+	      };
 	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find('location', {}, {}).then(function (results) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);
@@ -231,13 +267,72 @@ module.exports =
 	      var _this2 = this;
 
 	      var filter = {
-	        _id: this.mongoUtil.getObjectID(locationId)
+	        _id: this.mongoUtil.getObjectID(locationId),
+	        status: true
 	      };
 	      return new Promise(function (resolve, reject) {
-	        _this2.mongoUtil.findOne('location', filter).then(function (results) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'saveLocation',
+	    value: function saveLocation(data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        created: new Date(),
+	        status: true
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'updateLocation',
+	    value: function updateLocation(locationId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(locationId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'deleteLocation',
+	    value: function deleteLocation(locationId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        _this5.getLocation(locationId).then(function (data) {
+	          var filter = {
+	            _id: _this5.mongoUtil.getObjectID(locationId)
+	          };
+	          var newData = _lodash2.default.assign({}, data, {
+	            deleted: new Date(),
+	            status: false
+	          });
+	          _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	            return resolve(results);
+	          }).catch(function (err) {
+	            return reject(err);
+	          });
 	        });
 	      });
 	    }
@@ -350,6 +445,12 @@ module.exports =
 /***/ function(module, exports) {
 
 	module.exports = require("convict");
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	module.exports = require("lodash");
 
 /***/ }
 /******/ ]);
