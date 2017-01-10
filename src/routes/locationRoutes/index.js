@@ -41,17 +41,54 @@ router.get('/:locationId', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  res.json({
-    status: true,
-    data: 'location post',
-  });
+  locationController
+    .saveLocation(req.body)
+    .then((results) => {
+      res.json({
+        status: true,
+        data: results,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        status: false,
+        data: error,
+      });
+    });
 });
 
-router.put('/', (req, res) => {
-  res.json({
-    status: true,
-    data: 'location post',
-  });
+router.put('/:locationId', (req, res) => {
+  locationController
+    .updateLocation(req.params.locationId, req.body)
+    .then((results) => {
+      res.json({
+        status: true,
+        data: results,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        status: false,
+        data: error,
+      });
+    });
+});
+
+router.delete('/:locationId', (req, res) => {
+  locationController
+    .deleteLocation(req.params.locationId, req.body)
+    .then((results) => {
+      res.json({
+        status: true,
+        data: results,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        status: false,
+        data: error,
+      });
+    });
 });
 
 export default router;
