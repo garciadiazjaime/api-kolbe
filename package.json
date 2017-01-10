@@ -2,11 +2,12 @@
   "name": "api-kolbe",
   "version": "1.0.0",
   "description": "",
-  "main": "build/server.js",
+  "main": "start.js",
   "scripts": {
     "dev": "nodemon build/server.js",
     "lint": "./node_modules/.bin/eslint .",
     "test": "npm run lint && npm run unittest",
+    "start": "node --use_strict start.js",
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive test",
     "webpack": "webpack --progress --colors"
   },

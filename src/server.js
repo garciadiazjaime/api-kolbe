@@ -10,6 +10,7 @@ const mongoUtil = new MongoUtil(config.get('db.url'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('static'));
 
 app.use('/api/location', locationRoutes);
 

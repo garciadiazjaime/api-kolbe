@@ -63,7 +63,7 @@ module.exports =
 
 	var _locationRoutes2 = _interopRequireDefault(_locationRoutes);
 
-	var _config = __webpack_require__(6);
+	var _config = __webpack_require__(7);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -74,6 +74,7 @@ module.exports =
 
 	app.use(_bodyParser2.default.urlencoded({ extended: true }));
 	app.use(_bodyParser2.default.json());
+	app.use(_express2.default.static('static'));
 
 	app.use('/api/location', _locationRoutes2.default);
 
@@ -229,7 +230,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(8);
+	var _lodash = __webpack_require__(6);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -345,6 +346,12 @@ module.exports =
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	module.exports = require("lodash");
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -353,7 +360,7 @@ module.exports =
 	  value: true
 	});
 
-	var _convict = __webpack_require__(7);
+	var _convict = __webpack_require__(8);
 
 	var _convict2 = _interopRequireDefault(_convict);
 
@@ -371,13 +378,13 @@ module.exports =
 	    doc: 'The IP address to bind.',
 	    format: 'ipaddress',
 	    default: '127.0.0.1',
-	    env: 'OPENSHIFT_NODEJS_IP'
+	    env: 'NODE_IP'
 	  },
 	  port: {
 	    doc: 'The port to bind.',
 	    format: 'port',
 	    default: 3000,
-	    env: 'OPENSHIFT_NODEJS_PORT'
+	    env: 'NODE_PORT'
 	  },
 	  db: {
 	    url: {
@@ -441,16 +448,10 @@ module.exports =
 	exports.default = config;
 
 /***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = require("convict");
-
-/***/ },
 /* 8 */
 /***/ function(module, exports) {
 
-	module.exports = require("lodash");
+	module.exports = require("convict");
 
 /***/ }
 /******/ ]);
