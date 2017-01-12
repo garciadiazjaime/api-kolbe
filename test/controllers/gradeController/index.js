@@ -4,14 +4,14 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
-import GradeController from '../../../src/controllers/gradeController';
+import PeriodController from '../../../src/controllers/periodController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe('GradeController', () => {
-  const gradeController = new GradeController();
+describe('PeriodController', () => {
+  const periodController = new PeriodController();
 
   describe("#list", () => {
     describe("valid case", () => {
@@ -26,7 +26,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.find.restore();
       });
 
-      it('resolves a promise', () => expect(gradeController.list()).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(periodController.list()).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -41,7 +41,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.find.restore();
       });
 
-      it('rejects a promise', () => expect(gradeController.list()).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(periodController.list()).to.be.rejectedWith(invalidResponse));
     });
   });
 
@@ -60,7 +60,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.findOne.restore();
       });
 
-      it('resolves a promise', () => expect(gradeController.get(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(periodController.get(locationId)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -75,7 +75,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.findOne.restore();
       });
 
-      it('rejects a promise', () => expect(gradeController.get(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(periodController.get(locationId)).to.be.rejectedWith(invalidResponse));
     });
   });
 
@@ -94,7 +94,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.insert.restore();
       });
 
-      it('resolves a promise', () => expect(gradeController.save(data)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(periodController.save(data)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -109,7 +109,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.insert.restore();
       });
 
-      it('rejects a promise', () => expect(gradeController.save(data)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(periodController.save(data)).to.be.rejectedWith(invalidResponse));
     });
   });
 
@@ -129,7 +129,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('resolves a promise', () => expect(gradeController.update(locationId, data)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(periodController.update(locationId, data)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -144,7 +144,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('rejects a promise', () => expect(gradeController.update(locationId, data)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(periodController.update(locationId, data)).to.be.rejectedWith(invalidResponse));
     });
   });
 
@@ -163,7 +163,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('resolves a promise', () => expect(gradeController.delete(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(periodController.delete(locationId)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -178,7 +178,7 @@ describe('GradeController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('rejects a promise', () => expect(gradeController.delete(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(periodController.delete(locationId)).to.be.rejectedWith(invalidResponse));
     });
   });
 });

@@ -4,6 +4,7 @@ import MongoUtil from 'util-mongodb';
 
 import locationRoutes from './routes/locationRoutes';
 import periodRoutes from './routes/periodRoutes';
+import gradeRoutes from './routes/gradeRoutes';
 import config from './config';
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.static('static'));
 
 app.use('/api/location', locationRoutes);
 locationRoutes.use('/:locationId/period', periodRoutes);
+periodRoutes.use('/:periodId/grade', gradeRoutes);
 
 app.get('/health', (req, res) => {
   res.writeHead(200);
