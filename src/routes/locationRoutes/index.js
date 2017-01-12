@@ -9,33 +9,33 @@ const locationController = new LocationController();
 router.get('/', (req, res) => {
   locationController
     .list()
-    .then((results) => {
+    .then((data) => {
       res.json({
         status: true,
-        data: results,
+        data,
       });
     })
     .catch((error) => {
       res.json({
         status: false,
-        data: error,
+        error,
       });
     });
 });
 
 router.get('/:locationId', (req, res) => {
   locationController
-    .get(req && req.params ? req.params.locationId : null)
-    .then((results) => {
+    .get(req.params.locationId)
+    .then((data) => {
       res.json({
         status: true,
-        data: results,
+        data,
       });
     })
     .catch((error) => {
       res.json({
         status: false,
-        data: error,
+        error,
       });
     });
 });
@@ -43,16 +43,16 @@ router.get('/:locationId', (req, res) => {
 router.post('/', (req, res) => {
   locationController
     .save(req.body)
-    .then((results) => {
+    .then((data) => {
       res.json({
         status: true,
-        data: results,
+        data,
       });
     })
     .catch((error) => {
       res.json({
         status: false,
-        data: error,
+        error,
       });
     });
 });
@@ -60,16 +60,16 @@ router.post('/', (req, res) => {
 router.put('/:locationId', (req, res) => {
   locationController
     .update(req.params.locationId, req.body)
-    .then((results) => {
+    .then((data) => {
       res.json({
         status: true,
-        data: results,
+        data,
       });
     })
     .catch((error) => {
       res.json({
         status: false,
-        data: error,
+        error,
       });
     });
 });
@@ -77,16 +77,16 @@ router.put('/:locationId', (req, res) => {
 router.delete('/:locationId', (req, res) => {
   locationController
     .delete(req.params.locationId, req.body)
-    .then((results) => {
+    .then((data) => {
       res.json({
         status: true,
-        data: results,
+        data,
       });
     })
     .catch((error) => {
       res.json({
         status: false,
-        data: error,
+        error,
       });
     });
 });

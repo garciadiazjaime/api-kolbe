@@ -63,11 +63,11 @@ module.exports =
 
 	var _locationRoutes2 = _interopRequireDefault(_locationRoutes);
 
-	var _periodRoutes = __webpack_require__(9);
+	var _periodRoutes = __webpack_require__(7);
 
 	var _periodRoutes2 = _interopRequireDefault(_periodRoutes);
 
-	var _config = __webpack_require__(7);
+	var _config = __webpack_require__(9);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -148,71 +148,71 @@ module.exports =
 	var locationController = new _locationController2.default();
 
 	router.get('/', function (req, res) {
-	  locationController.list().then(function (results) {
+	  locationController.list().then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.get('/:locationId', function (req, res) {
-	  locationController.get(req && req.params ? req.params.locationId : null).then(function (results) {
+	  locationController.get(req.params.locationId).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.post('/', function (req, res) {
-	  locationController.save(req.body).then(function (results) {
+	  locationController.save(req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.put('/:locationId', function (req, res) {
-	  locationController.update(req.params.locationId, req.body).then(function (results) {
+	  locationController.update(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.delete('/:locationId', function (req, res) {
-	  locationController.delete(req.params.locationId, req.body).then(function (results) {
+	  locationController.delete(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
@@ -363,114 +363,11 @@ module.exports =
 	  value: true
 	});
 
-	var _convict = __webpack_require__(8);
-
-	var _convict2 = _interopRequireDefault(_convict);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Define a schema
-	var config = (0, _convict2.default)({
-	  env: {
-	    doc: 'The applicaton environment.',
-	    format: ['production', 'development', 'test'],
-	    default: 'development',
-	    env: 'NODE_ENV'
-	  },
-	  ipaddress: {
-	    doc: 'The IP address to bind.',
-	    format: 'ipaddress',
-	    default: '127.0.0.1',
-	    env: 'NODE_IP'
-	  },
-	  port: {
-	    doc: 'The port to bind.',
-	    format: 'port',
-	    default: 3000,
-	    env: 'NODE_PORT'
-	  },
-	  db: {
-	    url: {
-	      doc: 'Database hostname',
-	      format: String,
-	      default: 'mongodb://localhost:27017/kolbe',
-	      env: 'DB_URL'
-	    }
-	  },
-	  loggly: {
-	    token: {
-	      doc: 'Loggly token',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_TOKEN'
-	    },
-	    subdomain: {
-	      doc: 'Loggly subdomain',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_SUBDOMIAN'
-	    },
-	    username: {
-	      doc: 'Loggly username',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_USERNAME'
-	    },
-	    password: {
-	      doc: 'Loggly password',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_PASSWORD'
-	    }
-	  },
-	  alchemy: {
-	    apiUrl: {
-	      doc: 'Alchemy API URL',
-	      format: String,
-	      default: '',
-	      env: 'ALCHEMY_API_URL'
-	    },
-	    token: {
-	      doc: 'Alchemy token',
-	      format: String,
-	      default: '',
-	      env: 'ALCHEMY_TOKEN'
-	    }
-	  },
-	  secureToken: {
-	    doc: 'Our token',
-	    format: String,
-	    default: '',
-	    env: 'MINT_TOKEN'
-	  }
-	});
-
-	// Perform validation
-	config.validate({ strict: true });
-
-	exports.default = config;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	module.exports = require("convict");
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
 	var _express = __webpack_require__(1);
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _periodController = __webpack_require__(10);
+	var _periodController = __webpack_require__(8);
 
 	var _periodController2 = _interopRequireDefault(_periodController);
 
@@ -482,71 +379,71 @@ module.exports =
 	var periodController = new _periodController2.default();
 
 	router.get('/', function (req, res) {
-	  periodController.list(req.params.locationId).then(function (results) {
+	  periodController.list(req.params.locationId).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.get('/:periodId', function (req, res) {
-	  periodController.get(req.params.periodId).then(function (results) {
+	  periodController.get(req.params.periodId).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.post('/', function (req, res) {
-	  periodController.save(req.params.locationId, req.body).then(function (results) {
+	  periodController.save(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.put('/:periodId', function (req, res) {
-	  periodController.update(req.params.periodId, req.body).then(function (results) {
+	  periodController.update(req.params.periodId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.delete('/:periodId', function (req, res) {
-	  periodController.delete(req.params.periodId, req.body).then(function (results) {
+	  periodController.delete(req.params.periodId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
@@ -554,7 +451,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -682,6 +579,109 @@ module.exports =
 	}();
 
 	exports.default = PeriodController;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _convict = __webpack_require__(10);
+
+	var _convict2 = _interopRequireDefault(_convict);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Define a schema
+	var config = (0, _convict2.default)({
+	  env: {
+	    doc: 'The applicaton environment.',
+	    format: ['production', 'development', 'test'],
+	    default: 'development',
+	    env: 'NODE_ENV'
+	  },
+	  ipaddress: {
+	    doc: 'The IP address to bind.',
+	    format: 'ipaddress',
+	    default: '127.0.0.1',
+	    env: 'NODE_IP'
+	  },
+	  port: {
+	    doc: 'The port to bind.',
+	    format: 'port',
+	    default: 3000,
+	    env: 'NODE_PORT'
+	  },
+	  db: {
+	    url: {
+	      doc: 'Database hostname',
+	      format: String,
+	      default: 'mongodb://localhost:27017/kolbe',
+	      env: 'DB_URL'
+	    }
+	  },
+	  loggly: {
+	    token: {
+	      doc: 'Loggly token',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_TOKEN'
+	    },
+	    subdomain: {
+	      doc: 'Loggly subdomain',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_SUBDOMIAN'
+	    },
+	    username: {
+	      doc: 'Loggly username',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_USERNAME'
+	    },
+	    password: {
+	      doc: 'Loggly password',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_PASSWORD'
+	    }
+	  },
+	  alchemy: {
+	    apiUrl: {
+	      doc: 'Alchemy API URL',
+	      format: String,
+	      default: '',
+	      env: 'ALCHEMY_API_URL'
+	    },
+	    token: {
+	      doc: 'Alchemy token',
+	      format: String,
+	      default: '',
+	      env: 'ALCHEMY_TOKEN'
+	    }
+	  },
+	  secureToken: {
+	    doc: 'Our token',
+	    format: String,
+	    default: '',
+	    env: 'MINT_TOKEN'
+	  }
+	});
+
+	// Perform validation
+	config.validate({ strict: true });
+
+	exports.default = config;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = require("convict");
 
 /***/ }
 /******/ ]);

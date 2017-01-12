@@ -169,7 +169,6 @@ describe('LocationController', () => {
     describe("invalid case", () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
-      const promiseLocation = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
         sinon.stub(MongoUtil.prototype, 'update', () => promise);
