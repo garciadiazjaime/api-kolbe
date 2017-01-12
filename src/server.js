@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import MongoUtil from 'util-mongodb';
 
 import locationRoutes from './routes/locationRoutes';
+import periodRoutes from './routes/periodRoutes';
 import config from './config';
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static('static'));
 
 app.use('/api/location', locationRoutes);
+locationRoutes.use('/:locationId/period', periodRoutes);
 
 app.get('/health', (req, res) => {
   res.writeHead(200);

@@ -63,6 +63,10 @@ module.exports =
 
 	var _locationRoutes2 = _interopRequireDefault(_locationRoutes);
 
+	var _periodRoutes = __webpack_require__(9);
+
+	var _periodRoutes2 = _interopRequireDefault(_periodRoutes);
+
 	var _config = __webpack_require__(7);
 
 	var _config2 = _interopRequireDefault(_config);
@@ -77,6 +81,7 @@ module.exports =
 	app.use(_express2.default.static('static'));
 
 	app.use('/api/location', _locationRoutes2.default);
+	_locationRoutes2.default.use('/:locationId/period', _periodRoutes2.default);
 
 	app.get('/health', function (req, res) {
 	  res.writeHead(200);
@@ -143,7 +148,7 @@ module.exports =
 	var locationController = new _locationController2.default();
 
 	router.get('/', function (req, res) {
-	  locationController.getLocations().then(function (results) {
+	  locationController.list().then(function (results) {
 	    res.json({
 	      status: true,
 	      data: results
@@ -157,7 +162,7 @@ module.exports =
 	});
 
 	router.get('/:locationId', function (req, res) {
-	  locationController.getLocation(req && req.params ? req.params.locationId : null).then(function (results) {
+	  locationController.get(req && req.params ? req.params.locationId : null).then(function (results) {
 	    res.json({
 	      status: true,
 	      data: results
@@ -171,7 +176,7 @@ module.exports =
 	});
 
 	router.post('/', function (req, res) {
-	  locationController.saveLocation(req.body).then(function (results) {
+	  locationController.save(req.body).then(function (results) {
 	    res.json({
 	      status: true,
 	      data: results
@@ -185,7 +190,7 @@ module.exports =
 	});
 
 	router.put('/:locationId', function (req, res) {
-	  locationController.updateLocation(req.params.locationId, req.body).then(function (results) {
+	  locationController.update(req.params.locationId, req.body).then(function (results) {
 	    res.json({
 	      status: true,
 	      data: results
@@ -199,7 +204,7 @@ module.exports =
 	});
 
 	router.delete('/:locationId', function (req, res) {
-	  locationController.deleteLocation(req.params.locationId, req.body).then(function (results) {
+	  locationController.delete(req.params.locationId, req.body).then(function (results) {
 	    res.json({
 	      status: true,
 	      data: results
@@ -247,8 +252,8 @@ module.exports =
 	  }
 
 	  _createClass(LocationController, [{
-	    key: 'getLocations',
-	    value: function getLocations() {
+	    key: 'list',
+	    value: function list() {
 	      var _this = this;
 
 	      var filter = {
@@ -263,8 +268,8 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'getLocation',
-	    value: function getLocation(locationId) {
+	    key: 'get',
+	    value: function get(locationId) {
 	      var _this2 = this;
 
 	      var filter = {
@@ -280,8 +285,8 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'saveLocation',
-	    value: function saveLocation(data) {
+	    key: 'save',
+	    value: function save(data) {
 	      var _this3 = this;
 
 	      var newData = _lodash2.default.assign({}, data, {
@@ -297,8 +302,8 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'updateLocation',
-	    value: function updateLocation(locationId, data) {
+	    key: 'update',
+	    value: function update(locationId, data) {
 	      var _this4 = this;
 
 	      var filter = {
@@ -316,24 +321,22 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'deleteLocation',
-	    value: function deleteLocation(locationId) {
+	    key: 'delete',
+	    value: function _delete(locationId) {
 	      var _this5 = this;
 
 	      return new Promise(function (resolve, reject) {
-	        _this5.getLocation(locationId).then(function (data) {
-	          var filter = {
-	            _id: _this5.mongoUtil.getObjectID(locationId)
-	          };
-	          var newData = _lodash2.default.assign({}, data, {
-	            deleted: new Date(),
-	            status: false
-	          });
-	          _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
-	            return resolve(results);
-	          }).catch(function (err) {
-	            return reject(err);
-	          });
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(locationId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
 	        });
 	      });
 	    }
@@ -452,6 +455,233 @@ module.exports =
 /***/ function(module, exports) {
 
 	module.exports = require("convict");
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _periodController = __webpack_require__(10);
+
+	var _periodController2 = _interopRequireDefault(_periodController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var periodController = new _periodController2.default();
+
+	router.get('/', function (req, res) {
+	  periodController.list(req.params.locationId).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
+	  });
+	});
+
+	router.get('/:periodId', function (req, res) {
+	  periodController.get(req.params.periodId).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  periodController.save(req.params.locationId, req.body).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
+	  });
+	});
+
+	router.put('/:periodId', function (req, res) {
+	  periodController.update(req.params.periodId, req.body).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
+	  });
+	});
+
+	router.delete('/:periodId', function (req, res) {
+	  periodController.delete(req.params.periodId, req.body).then(function (results) {
+	    res.json({
+	      status: true,
+	      data: results
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      data: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var PeriodController = function () {
+	  function PeriodController() {
+	    _classCallCheck(this, PeriodController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'period';
+	  }
+
+	  _createClass(PeriodController, [{
+	    key: 'list',
+	    value: function list(locationId) {
+	      var _this = this;
+
+	      var filter = {
+	        status: true,
+	        locationId: locationId
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(periodId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(periodId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(locationId, data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        locationId: locationId,
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(periodId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(periodId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(periodId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(periodId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return PeriodController;
+	}();
+
+	exports.default = PeriodController;
 
 /***/ }
 /******/ ]);
