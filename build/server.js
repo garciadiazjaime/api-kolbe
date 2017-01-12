@@ -150,10 +150,11 @@ module.exports =
 	/*eslint-disable */
 	var router = _express2.default.Router();
 	/*eslint-enable */
-	var locationController = new _locationController2.default();
+	var controller = new _locationController2.default();
+	var identiyId = 'locationId';
 
 	router.get('/', function (req, res) {
-	  locationController.list().then(function (data) {
+	  controller.list().then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -166,8 +167,8 @@ module.exports =
 	  });
 	});
 
-	router.get('/:locationId', function (req, res) {
-	  locationController.get(req.params.locationId).then(function (data) {
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params.locationId).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -181,7 +182,7 @@ module.exports =
 	});
 
 	router.post('/', function (req, res) {
-	  locationController.save(req.body).then(function (data) {
+	  controller.save(req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -194,8 +195,8 @@ module.exports =
 	  });
 	});
 
-	router.put('/:locationId', function (req, res) {
-	  locationController.update(req.params.locationId, req.body).then(function (data) {
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -208,8 +209,8 @@ module.exports =
 	  });
 	});
 
-	router.delete('/:locationId', function (req, res) {
-	  locationController.delete(req.params.locationId, req.body).then(function (data) {
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -381,10 +382,12 @@ module.exports =
 	/*eslint-disable */
 	var router = _express2.default.Router({ mergeParams: true });
 	/*eslint-enable */
-	var periodController = new _periodController2.default();
+	var controller = new _periodController2.default();
+	var parentId = 'locationId';
+	var identiyId = 'periodId';
 
 	router.get('/', function (req, res) {
-	  periodController.list(req.params.locationId).then(function (data) {
+	  controller.list(req.params[parentId]).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -397,8 +400,8 @@ module.exports =
 	  });
 	});
 
-	router.get('/:periodId', function (req, res) {
-	  periodController.get(req.params.periodId).then(function (data) {
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -412,7 +415,7 @@ module.exports =
 	});
 
 	router.post('/', function (req, res) {
-	  periodController.save(req.params.locationId, req.body).then(function (data) {
+	  controller.save(req.params[parentId], req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -425,8 +428,8 @@ module.exports =
 	  });
 	});
 
-	router.put('/:periodId', function (req, res) {
-	  periodController.update(req.params.periodId, req.body).then(function (data) {
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -439,8 +442,8 @@ module.exports =
 	  });
 	});
 
-	router.delete('/:periodId', function (req, res) {
-	  periodController.delete(req.params.periodId, req.body).then(function (data) {
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data

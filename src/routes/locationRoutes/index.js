@@ -4,10 +4,11 @@ import LocationController from '../../controllers/locationController';
 /*eslint-disable */
 const router = express.Router();
 /*eslint-enable */
-const locationController = new LocationController();
+const controller = new LocationController();
+const identiyId = 'locationId';
 
 router.get('/', (req, res) => {
-  locationController
+  controller
     .list()
     .then((data) => {
       res.json({
@@ -23,8 +24,8 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:locationId', (req, res) => {
-  locationController
+router.get(`/:${identiyId}`, (req, res) => {
+  controller
     .get(req.params.locationId)
     .then((data) => {
       res.json({
@@ -41,7 +42,7 @@ router.get('/:locationId', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  locationController
+  controller
     .save(req.body)
     .then((data) => {
       res.json({
@@ -57,8 +58,8 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:locationId', (req, res) => {
-  locationController
+router.put(`/:${identiyId}`, (req, res) => {
+  controller
     .update(req.params.locationId, req.body)
     .then((data) => {
       res.json({
@@ -74,8 +75,8 @@ router.put('/:locationId', (req, res) => {
     });
 });
 
-router.delete('/:locationId', (req, res) => {
-  locationController
+router.delete(`/:${identiyId}`, (req, res) => {
+  controller
     .delete(req.params.locationId, req.body)
     .then((data) => {
       res.json({

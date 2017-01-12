@@ -4,11 +4,13 @@ import PeriodController from '../../controllers/periodController';
 /*eslint-disable */
 const router = express.Router({mergeParams: true});
 /*eslint-enable */
-const periodController = new PeriodController();
+const controller = new PeriodController();
+const parentId = 'locationId';
+const identiyId = 'periodId';
 
 router.get('/', (req, res) => {
-  periodController
-    .list(req.params.locationId)
+  controller
+    .list(req.params[parentId])
     .then((data) => {
       res.json({
         status: true,
@@ -23,9 +25,9 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:periodId', (req, res) => {
-  periodController
-    .get(req.params.periodId)
+router.get(`/:${identiyId}`, (req, res) => {
+  controller
+    .get(req.params[identiyId])
     .then((data) => {
       res.json({
         status: true,
@@ -41,8 +43,8 @@ router.get('/:periodId', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  periodController
-    .save(req.params.locationId, req.body)
+  controller
+    .save(req.params[parentId], req.body)
     .then((data) => {
       res.json({
         status: true,
@@ -57,9 +59,9 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:periodId', (req, res) => {
-  periodController
-    .update(req.params.periodId, req.body)
+router.put(`/:${identiyId}`, (req, res) => {
+  controller
+    .update(req.params[identiyId], req.body)
     .then((data) => {
       res.json({
         status: true,
@@ -74,9 +76,9 @@ router.put('/:periodId', (req, res) => {
     });
 });
 
-router.delete('/:periodId', (req, res) => {
-  periodController
-    .delete(req.params.periodId, req.body)
+router.delete(`/:${identiyId}`, (req, res) => {
+  controller
+    .delete(req.params[identiyId], req.body)
     .then((data) => {
       res.json({
         status: true,
