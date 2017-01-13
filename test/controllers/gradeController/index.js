@@ -4,14 +4,14 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
-import PeriodController from '../../../src/controllers/periodController';
+import GradeController from '../../../src/controllers/gradeController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe('PeriodController', () => {
-  const periodController = new PeriodController();
+describe('GradeController', () => {
+  const controller = new GradeController();
 
   describe("#list", () => {
     describe("valid case", () => {
@@ -26,7 +26,7 @@ describe('PeriodController', () => {
         MongoUtil.prototype.find.restore();
       });
 
-      it('resolves a promise', () => expect(periodController.list()).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.list()).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -41,11 +41,11 @@ describe('PeriodController', () => {
         MongoUtil.prototype.find.restore();
       });
 
-      it('rejects a promise', () => expect(periodController.list()).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.list()).to.be.rejectedWith(invalidResponse));
     });
   });
 
-  describe("#get(locationId)", () => {
+  describe("#get", () => {
     const locationId = 1;
 
     describe("valid case", () => {
@@ -60,7 +60,7 @@ describe('PeriodController', () => {
         MongoUtil.prototype.findOne.restore();
       });
 
-      it('resolves a promise', () => expect(periodController.get(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.get(locationId)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -75,11 +75,11 @@ describe('PeriodController', () => {
         MongoUtil.prototype.findOne.restore();
       });
 
-      it('rejects a promise', () => expect(periodController.get(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.get(locationId)).to.be.rejectedWith(invalidResponse));
     });
   });
 
-  describe("#save()", () => {
+  describe("#save", () => {
     const data = {};
 
     describe("valid case", () => {
@@ -94,7 +94,7 @@ describe('PeriodController', () => {
         MongoUtil.prototype.insert.restore();
       });
 
-      it('resolves a promise', () => expect(periodController.save(data)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.save(data)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -109,11 +109,11 @@ describe('PeriodController', () => {
         MongoUtil.prototype.insert.restore();
       });
 
-      it('rejects a promise', () => expect(periodController.save(data)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.save(data)).to.be.rejectedWith(invalidResponse));
     });
   });
 
-  describe("#update()", () => {
+  describe("#update", () => {
     const locationId = 1;
     const data = {};
 
@@ -129,7 +129,7 @@ describe('PeriodController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('resolves a promise', () => expect(periodController.update(locationId, data)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.update(locationId, data)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -144,11 +144,11 @@ describe('PeriodController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('rejects a promise', () => expect(periodController.update(locationId, data)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.update(locationId, data)).to.be.rejectedWith(invalidResponse));
     });
   });
 
-  describe("#delete()", () => {
+  describe("#delete", () => {
     const locationId = 1;
     const validResponse = {};
 
@@ -163,7 +163,7 @@ describe('PeriodController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('resolves a promise', () => expect(periodController.delete(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.delete(locationId)).to.eventually.equal(validResponse));
     });
 
     describe("invalid case", () => {
@@ -178,7 +178,7 @@ describe('PeriodController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('rejects a promise', () => expect(periodController.delete(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejectedWith(invalidResponse));
     });
   });
 });
