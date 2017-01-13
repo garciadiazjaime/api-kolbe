@@ -4,14 +4,14 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
-import LocationController from '../../../src/controllers/locationController';
+import GroupController from '../../../src/controllers/groupController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe('LocationController', () => {
-  const controller = new LocationController();
+describe('GroupController', () => {
+  const controller = new GroupController();
 
   describe("#list", () => {
     describe("valid case", () => {

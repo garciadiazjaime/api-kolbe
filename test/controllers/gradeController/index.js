@@ -4,14 +4,14 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
-import LocationController from '../../../src/controllers/locationController';
+import GradeController from '../../../src/controllers/gradeController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe('LocationController', () => {
-  const controller = new LocationController();
+describe('GradeController', () => {
+  const controller = new GradeController();
 
   describe("#list", () => {
     describe("valid case", () => {

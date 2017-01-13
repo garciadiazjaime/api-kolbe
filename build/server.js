@@ -63,7 +63,19 @@ module.exports =
 
 	var _locationRoutes2 = _interopRequireDefault(_locationRoutes);
 
-	var _config = __webpack_require__(6);
+	var _periodRoutes = __webpack_require__(7);
+
+	var _periodRoutes2 = _interopRequireDefault(_periodRoutes);
+
+	var _gradeRoutes = __webpack_require__(9);
+
+	var _gradeRoutes2 = _interopRequireDefault(_gradeRoutes);
+
+	var _groupRoutes = __webpack_require__(13);
+
+	var _groupRoutes2 = _interopRequireDefault(_groupRoutes);
+
+	var _config = __webpack_require__(11);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -74,8 +86,12 @@ module.exports =
 
 	app.use(_bodyParser2.default.urlencoded({ extended: true }));
 	app.use(_bodyParser2.default.json());
+	app.use(_express2.default.static('static'));
 
 	app.use('/api/location', _locationRoutes2.default);
+	_locationRoutes2.default.use('/:locationId/period', _periodRoutes2.default);
+	_periodRoutes2.default.use('/:periodId/grade', _gradeRoutes2.default);
+	_gradeRoutes2.default.use('/:gradeId/group', _groupRoutes2.default);
 
 	app.get('/health', function (req, res) {
 	  res.writeHead(200);
@@ -139,74 +155,75 @@ module.exports =
 	/*eslint-disable */
 	var router = _express2.default.Router();
 	/*eslint-enable */
-	var locationController = new _locationController2.default();
+	var controller = new _locationController2.default();
+	var identiyId = 'locationId';
 
 	router.get('/', function (req, res) {
-	  locationController.getLocations().then(function (results) {
+	  controller.list().then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
-	router.get('/:locationId', function (req, res) {
-	  locationController.getLocation(req && req.params ? req.params.locationId : null).then(function (results) {
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params.locationId).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
 	router.post('/', function (req, res) {
-	  locationController.saveLocation(req.body).then(function (results) {
+	  controller.save(req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
-	router.put('/:locationId', function (req, res) {
-	  locationController.updateLocation(req.params.locationId, req.body).then(function (results) {
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
 
-	router.delete('/:locationId', function (req, res) {
-	  locationController.deleteLocation(req.params.locationId, req.body).then(function (results) {
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params.locationId, req.body).then(function (data) {
 	    res.json({
 	      status: true,
-	      data: results
+	      data: data
 	    });
 	  }).catch(function (error) {
 	    res.json({
 	      status: false,
-	      data: error
+	      error: error
 	    });
 	  });
 	});
@@ -229,7 +246,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(8);
+	var _lodash = __webpack_require__(6);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -246,8 +263,8 @@ module.exports =
 	  }
 
 	  _createClass(LocationController, [{
-	    key: 'getLocations',
-	    value: function getLocations() {
+	    key: 'list',
+	    value: function list() {
 	      var _this = this;
 
 	      var filter = {
@@ -262,8 +279,8 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'getLocation',
-	    value: function getLocation(locationId) {
+	    key: 'get',
+	    value: function get(locationId) {
 	      var _this2 = this;
 
 	      var filter = {
@@ -279,8 +296,8 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'saveLocation',
-	    value: function saveLocation(data) {
+	    key: 'save',
+	    value: function save(data) {
 	      var _this3 = this;
 
 	      var newData = _lodash2.default.assign({}, data, {
@@ -296,8 +313,8 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'updateLocation',
-	    value: function updateLocation(locationId, data) {
+	    key: 'update',
+	    value: function update(locationId, data) {
 	      var _this4 = this;
 
 	      var filter = {
@@ -315,24 +332,22 @@ module.exports =
 	      });
 	    }
 	  }, {
-	    key: 'deleteLocation',
-	    value: function deleteLocation(locationId) {
+	    key: 'delete',
+	    value: function _delete(locationId) {
 	      var _this5 = this;
 
 	      return new Promise(function (resolve, reject) {
-	        _this5.getLocation(locationId).then(function (data) {
-	          var filter = {
-	            _id: _this5.mongoUtil.getObjectID(locationId)
-	          };
-	          var newData = _lodash2.default.assign({}, data, {
-	            deleted: new Date(),
-	            status: false
-	          });
-	          _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
-	            return resolve(results);
-	          }).catch(function (err) {
-	            return reject(err);
-	          });
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(locationId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
 	        });
 	      });
 	    }
@@ -345,6 +360,12 @@ module.exports =
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	module.exports = require("lodash");
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -353,7 +374,465 @@ module.exports =
 	  value: true
 	});
 
-	var _convict = __webpack_require__(7);
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _periodController = __webpack_require__(8);
+
+	var _periodController2 = _interopRequireDefault(_periodController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var controller = new _periodController2.default();
+	var parentId = 'locationId';
+	var identiyId = 'periodId';
+
+	router.get('/', function (req, res) {
+	  controller.list(req.params[parentId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  controller.save(req.params[parentId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var PeriodController = function () {
+	  function PeriodController() {
+	    _classCallCheck(this, PeriodController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'period';
+	  }
+
+	  _createClass(PeriodController, [{
+	    key: 'list',
+	    value: function list(locationId) {
+	      var _this = this;
+
+	      var filter = {
+	        status: true,
+	        locationId: locationId
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(periodId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(periodId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(locationId, data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        locationId: locationId,
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(periodId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(periodId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(periodId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(periodId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return PeriodController;
+	}();
+
+	exports.default = PeriodController;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _gradeController = __webpack_require__(10);
+
+	var _gradeController2 = _interopRequireDefault(_gradeController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var controller = new _gradeController2.default();
+	var parentId = 'periodId';
+	var identiyId = 'gradeId';
+
+	router.get('/', function (req, res) {
+	  controller.list(req.params[parentId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  controller.save(req.params[parentId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var GradeController = function () {
+	  function GradeController() {
+	    _classCallCheck(this, GradeController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'grade';
+	  }
+
+	  _createClass(GradeController, [{
+	    key: 'list',
+	    value: function list(parentId) {
+	      var _this = this;
+
+	      var filter = {
+	        status: true,
+	        parentId: parentId
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(identityId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(parentId, data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        parentId: parentId,
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(identityId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(identityId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(identityId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return GradeController;
+	}();
+
+	exports.default = GradeController;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _convict = __webpack_require__(12);
 
 	var _convict2 = _interopRequireDefault(_convict);
 
@@ -371,13 +850,13 @@ module.exports =
 	    doc: 'The IP address to bind.',
 	    format: 'ipaddress',
 	    default: '127.0.0.1',
-	    env: 'OPENSHIFT_NODEJS_IP'
+	    env: 'NODE_IP'
 	  },
 	  port: {
 	    doc: 'The port to bind.',
 	    format: 'port',
 	    default: 3000,
-	    env: 'OPENSHIFT_NODEJS_PORT'
+	    env: 'NODE_PORT'
 	  },
 	  db: {
 	    url: {
@@ -441,16 +920,239 @@ module.exports =
 	exports.default = config;
 
 /***/ },
-/* 7 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("convict");
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = require("lodash");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _groupController = __webpack_require__(14);
+
+	var _groupController2 = _interopRequireDefault(_groupController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var controller = new _groupController2.default();
+	var parentId = 'gradeId';
+	var identiyId = 'groupId';
+
+	router.get('/', function (req, res) {
+	  controller.list(req.params[parentId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  controller.save(req.params[parentId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var GroupController = function () {
+	  function GroupController() {
+	    _classCallCheck(this, GroupController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'group';
+	  }
+
+	  _createClass(GroupController, [{
+	    key: 'list',
+	    value: function list(parentId) {
+	      var _this = this;
+
+	      var filter = {
+	        status: true,
+	        parentId: parentId
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(identityId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(parentId, data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        parentId: parentId,
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(identityId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(identityId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(identityId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return GroupController;
+	}();
+
+	exports.default = GroupController;
 
 /***/ }
 /******/ ]);

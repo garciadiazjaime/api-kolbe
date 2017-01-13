@@ -1,15 +1,16 @@
 import express from 'express';
-import LocationController from '../../controllers/locationController';
+import PeriodController from '../../controllers/periodController';
 
 /*eslint-disable */
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 /*eslint-enable */
-const controller = new LocationController();
-const identiyId = 'locationId';
+const controller = new PeriodController();
+const parentId = 'locationId';
+const identiyId = 'periodId';
 
 router.get('/', (req, res) => {
   controller
-    .list()
+    .list(req.params[parentId])
     .then((data) => {
       res.json({
         status: true,
@@ -26,7 +27,7 @@ router.get('/', (req, res) => {
 
 router.get(`/:${identiyId}`, (req, res) => {
   controller
-    .get(req.params.locationId)
+    .get(req.params[identiyId])
     .then((data) => {
       res.json({
         status: true,
@@ -43,7 +44,7 @@ router.get(`/:${identiyId}`, (req, res) => {
 
 router.post('/', (req, res) => {
   controller
-    .save(req.body)
+    .save(req.params[parentId], req.body)
     .then((data) => {
       res.json({
         status: true,
@@ -60,7 +61,7 @@ router.post('/', (req, res) => {
 
 router.put(`/:${identiyId}`, (req, res) => {
   controller
-    .update(req.params.locationId, req.body)
+    .update(req.params[identiyId], req.body)
     .then((data) => {
       res.json({
         status: true,
@@ -77,7 +78,7 @@ router.put(`/:${identiyId}`, (req, res) => {
 
 router.delete(`/:${identiyId}`, (req, res) => {
   controller
-    .delete(req.params.locationId, req.body)
+    .delete(req.params[identiyId], req.body)
     .then((data) => {
       res.json({
         status: true,

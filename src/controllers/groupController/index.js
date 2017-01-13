@@ -1,16 +1,17 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
-export default class LocationController {
+export default class GroupController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
-    this.collectionName = 'location';
+    this.collectionName = 'group';
   }
 
-  list() {
+  list(parentId) {
     const filter = {
       status: true,
+      parentId,
     };
     return new Promise((resolve, reject) => {
       this.mongoUtil.find(this.collectionName, filter, {})
@@ -19,9 +20,9 @@ export default class LocationController {
     });
   }
 
-  get(locationId) {
+  get(identityId) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(locationId),
+      _id: this.mongoUtil.getObjectID(identityId),
       status: true,
     };
     return new Promise((resolve, reject) => {
@@ -32,10 +33,11 @@ export default class LocationController {
     });
   }
 
-  save(data) {
+  save(parentId, data) {
     const newData = _.assign({}, data, {
-      created: new Date(),
+      parentId,
       status: true,
+      created: new Date(),
     });
     return new Promise((resolve, reject) => {
       this.mongoUtil
@@ -45,9 +47,9 @@ export default class LocationController {
     });
   }
 
-  update(locationId, data) {
+  update(identityId, data) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(locationId),
+      _id: this.mongoUtil.getObjectID(identityId),
     };
     const newData = _.assign({}, data, {
       updated: new Date(),
@@ -60,10 +62,10 @@ export default class LocationController {
     });
   }
 
-  delete(locationId) {
+  delete(identityId) {
     return new Promise((resolve, reject) => {
       const filter = {
-        _id: this.mongoUtil.getObjectID(locationId),
+        _id: this.mongoUtil.getObjectID(identityId),
       };
       const newData = _.assign({}, {
         deleted: new Date(),
