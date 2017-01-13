@@ -79,6 +79,14 @@ module.exports =
 
 	var _studentRoutes2 = _interopRequireDefault(_studentRoutes);
 
+	var _newsletterRoutes = __webpack_require__(17);
+
+	var _newsletterRoutes2 = _interopRequireDefault(_newsletterRoutes);
+
+	var _documentRoutes = __webpack_require__(19);
+
+	var _documentRoutes2 = _interopRequireDefault(_documentRoutes);
+
 	var _config = __webpack_require__(11);
 
 	var _config2 = _interopRequireDefault(_config);
@@ -93,11 +101,13 @@ module.exports =
 	app.use(_express2.default.static('static'));
 
 	app.use('/api/location', _locationRoutes2.default);
+	app.use('/api/student', _studentRoutes2.default);
+	app.use('/api/newsletter', _newsletterRoutes2.default);
+	app.use('/api/document', _documentRoutes2.default);
+
 	_locationRoutes2.default.use('/:locationId/period', _periodRoutes2.default);
 	_periodRoutes2.default.use('/:periodId/grade', _gradeRoutes2.default);
 	_gradeRoutes2.default.use('/:gradeId/group', _groupRoutes2.default);
-
-	app.use('/api/student', _studentRoutes2.default);
 
 	app.get('/health', function (req, res) {
 	  res.writeHead(200);
@@ -1386,6 +1396,460 @@ module.exports =
 	}();
 
 	exports.default = StudentController;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _newsletterController = __webpack_require__(18);
+
+	var _newsletterController2 = _interopRequireDefault(_newsletterController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var controller = new _newsletterController2.default();
+	var identiyId = 'newsletterId';
+
+	router.get('/', function (req, res) {
+	  controller.list().then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  controller.save(req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var NewsletterController = function () {
+	  function NewsletterController() {
+	    _classCallCheck(this, NewsletterController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'newsletter';
+	  }
+
+	  _createClass(NewsletterController, [{
+	    key: 'list',
+	    value: function list(parentId) {
+	      var _this = this;
+
+	      var filter = {
+	        status: true,
+	        parentId: parentId
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(identityId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(identityId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(identityId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(identityId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return NewsletterController;
+	}();
+
+	exports.default = NewsletterController;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _documentController = __webpack_require__(20);
+
+	var _documentController2 = _interopRequireDefault(_documentController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var controller = new _documentController2.default();
+	var identiyId = 'documentId';
+
+	router.get('/', function (req, res) {
+	  controller.list().then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  controller.save(req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DocumentController = function () {
+	  function DocumentController() {
+	    _classCallCheck(this, DocumentController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'document';
+	  }
+
+	  _createClass(DocumentController, [{
+	    key: 'list',
+	    value: function list(parentId) {
+	      var _this = this;
+
+	      var filter = {
+	        status: true,
+	        parentId: parentId
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(identityId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(identityId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(identityId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(identityId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return DocumentController;
+	}();
+
+	exports.default = DocumentController;
 
 /***/ }
 /******/ ]);

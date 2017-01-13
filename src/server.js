@@ -7,6 +7,8 @@ import periodRoutes from './routes/periodRoutes';
 import gradeRoutes from './routes/gradeRoutes';
 import groupRoutes from './routes/groupRoutes';
 import studentRoutes from './routes/studentRoutes';
+import newsletterRoutes from './routes/newsletterRoutes';
+import documentRoutes from './routes/documentRoutes';
 import config from './config';
 
 const app = express();
@@ -17,11 +19,13 @@ app.use(bodyParser.json());
 app.use(express.static('static'));
 
 app.use('/api/location', locationRoutes);
+app.use('/api/student', studentRoutes);
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/document', documentRoutes);
+
 locationRoutes.use('/:locationId/period', periodRoutes);
 periodRoutes.use('/:periodId/grade', gradeRoutes);
 gradeRoutes.use('/:gradeId/group', groupRoutes);
-
-app.use('/api/student', studentRoutes);
 
 app.get('/health', (req, res) => {
   res.writeHead(200);
