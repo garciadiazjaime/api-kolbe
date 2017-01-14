@@ -1,11 +1,11 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
-export default class NewsletterController {
+export default class ActivityController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
-    this.collectionName = 'newsletter';
+    this.collectionName = 'activity';
   }
 
   list() {

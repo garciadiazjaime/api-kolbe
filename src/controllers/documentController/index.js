@@ -8,10 +8,9 @@ export default class DocumentController {
     this.collectionName = 'document';
   }
 
-  list(parentId) {
+  list() {
     const filter = {
       status: true,
-      parentId,
     };
     return new Promise((resolve, reject) => {
       this.mongoUtil.find(this.collectionName, filter, {})

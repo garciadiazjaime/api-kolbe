@@ -9,6 +9,7 @@ import groupRoutes from './routes/groupRoutes';
 import studentRoutes from './routes/studentRoutes';
 import newsletterRoutes from './routes/newsletterRoutes';
 import documentRoutes from './routes/documentRoutes';
+import activityRoutes from './routes/activityRoutes';
 import config from './config';
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/api/location', locationRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/document', documentRoutes);
+app.use('/api/activity', activityRoutes);
 
 locationRoutes.use('/:locationId/period', periodRoutes);
 periodRoutes.use('/:periodId/grade', gradeRoutes);
