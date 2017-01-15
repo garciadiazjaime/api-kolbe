@@ -91,6 +91,10 @@ module.exports =
 
 	var _activityRoutes2 = _interopRequireDefault(_activityRoutes);
 
+	var _parentRoutes = __webpack_require__(23);
+
+	var _parentRoutes2 = _interopRequireDefault(_parentRoutes);
+
 	var _config = __webpack_require__(21);
 
 	var _config2 = _interopRequireDefault(_config);
@@ -109,6 +113,7 @@ module.exports =
 	app.use('/api/newsletter', _newsletterRoutes2.default);
 	app.use('/api/document', _documentRoutes2.default);
 	app.use('/api/activity', _activityRoutes2.default);
+	app.use('/api/parent', _parentRoutes2.default);
 
 	_locationRoutes2.default.use('/:locationId/period', _periodRoutes2.default);
 	_periodRoutes2.default.use('/:periodId/grade', _gradeRoutes2.default);
@@ -2079,6 +2084,232 @@ module.exports =
 /***/ function(module, exports) {
 
 	module.exports = require("convict");
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _express = __webpack_require__(1);
+
+	var _express2 = _interopRequireDefault(_express);
+
+	var _parentController = __webpack_require__(24);
+
+	var _parentController2 = _interopRequireDefault(_parentController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*eslint-disable */
+	var router = _express2.default.Router({ mergeParams: true });
+	/*eslint-enable */
+	var controller = new _parentController2.default();
+	var identiyId = 'parentId';
+
+	router.get('/', function (req, res) {
+	  controller.list().then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.get('/:' + identiyId, function (req, res) {
+	  controller.get(req.params[identiyId]).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.post('/', function (req, res) {
+	  controller.save(req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.put('/:' + identiyId, function (req, res) {
+	  controller.update(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	router.delete('/:' + identiyId, function (req, res) {
+	  controller.delete(req.params[identiyId], req.body).then(function (data) {
+	    res.json({
+	      status: true,
+	      data: data
+	    });
+	  }).catch(function (error) {
+	    res.json({
+	      status: false,
+	      error: error
+	    });
+	  });
+	});
+
+	exports.default = router;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utilMongodb = __webpack_require__(3);
+
+	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
+
+	var _lodash = __webpack_require__(6);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ParentController = function () {
+	  function ParentController() {
+	    _classCallCheck(this, ParentController);
+
+	    this.mongoUtil = new _utilMongodb2.default();
+	    this.collectionName = 'parent';
+	  }
+
+	  _createClass(ParentController, [{
+	    key: 'list',
+	    value: function list() {
+	      var _this = this;
+
+	      var filter = {
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(identityId) {
+	      var _this2 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId),
+	        status: true
+	      };
+	      return new Promise(function (resolve, reject) {
+	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save(data) {
+	      var _this3 = this;
+
+	      var newData = _lodash2.default.assign({}, data, {
+	        status: true,
+	        created: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(identityId, data) {
+	      var _this4 = this;
+
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(identityId)
+	      };
+	      var newData = _lodash2.default.assign({}, data, {
+	        updated: new Date()
+	      });
+	      return new Promise(function (resolve, reject) {
+	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'delete',
+	    value: function _delete(identityId) {
+	      var _this5 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        var filter = {
+	          _id: _this5.mongoUtil.getObjectID(identityId)
+	        };
+	        var newData = _lodash2.default.assign({}, {
+	          deleted: new Date(),
+	          status: false
+	        });
+	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
+	          return resolve(results);
+	        }).catch(function (err) {
+	          return reject(err);
+	        });
+	      });
+	    }
+	  }]);
+
+	  return ParentController;
+	}();
+
+	exports.default = ParentController;
 
 /***/ }
 /******/ ]);
