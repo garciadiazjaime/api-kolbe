@@ -1,9 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import MongoUtil from 'util-mongodb';
+import cors from 'cors';
 
 import locationRoutes from './routes/locationRoutes';
-import periodRoutes from './routes/periodRoutes';
+import levelRoutes from './routes/levelRoutes';
 import gradeRoutes from './routes/gradeRoutes';
 import groupRoutes from './routes/groupRoutes';
 import studentRoutes from './routes/studentRoutes';
@@ -16,20 +17,22 @@ import config from './config';
 const app = express();
 const mongoUtil = new MongoUtil(config.get('db.url'));
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('static'));
 
 app.use('/api/location', locationRoutes);
-app.use('/api/student', studentRoutes);
+// app.use('/api/student', studentRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/document', documentRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/parent', parentRoutes);
 
-locationRoutes.use('/:locationId/period', periodRoutes);
-periodRoutes.use('/:periodId/grade', gradeRoutes);
+locationRoutes.use('/:locationId/level', levelRoutes);
+levelRoutes.use('/:levelId/grade', gradeRoutes);
 gradeRoutes.use('/:gradeId/group', groupRoutes);
+groupRoutes.use('/:groupId/student', studentRoutes);
 
 app.get('/health', (req, res) => {
   res.writeHead(200);

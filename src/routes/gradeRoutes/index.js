@@ -5,7 +5,7 @@ import GradeController from '../../controllers/gradeController';
 const router = express.Router({mergeParams: true});
 /*eslint-enable */
 const controller = new GradeController();
-const parentId = 'periodId';
+const parentId = 'levelId';
 const identiyId = 'gradeId';
 
 router.get('/', (req, res) => {

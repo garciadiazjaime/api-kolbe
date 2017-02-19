@@ -59,43 +59,47 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _locationRoutes = __webpack_require__(4);
+	var _cors = __webpack_require__(4);
+
+	var _cors2 = _interopRequireDefault(_cors);
+
+	var _locationRoutes = __webpack_require__(5);
 
 	var _locationRoutes2 = _interopRequireDefault(_locationRoutes);
 
-	var _periodRoutes = __webpack_require__(7);
+	var _levelRoutes = __webpack_require__(8);
 
-	var _periodRoutes2 = _interopRequireDefault(_periodRoutes);
+	var _levelRoutes2 = _interopRequireDefault(_levelRoutes);
 
-	var _gradeRoutes = __webpack_require__(9);
+	var _gradeRoutes = __webpack_require__(10);
 
 	var _gradeRoutes2 = _interopRequireDefault(_gradeRoutes);
 
-	var _groupRoutes = __webpack_require__(11);
+	var _groupRoutes = __webpack_require__(12);
 
 	var _groupRoutes2 = _interopRequireDefault(_groupRoutes);
 
-	var _studentRoutes = __webpack_require__(13);
+	var _studentRoutes = __webpack_require__(14);
 
 	var _studentRoutes2 = _interopRequireDefault(_studentRoutes);
 
-	var _newsletterRoutes = __webpack_require__(15);
+	var _newsletterRoutes = __webpack_require__(16);
 
 	var _newsletterRoutes2 = _interopRequireDefault(_newsletterRoutes);
 
-	var _documentRoutes = __webpack_require__(17);
+	var _documentRoutes = __webpack_require__(18);
 
 	var _documentRoutes2 = _interopRequireDefault(_documentRoutes);
 
-	var _activityRoutes = __webpack_require__(19);
+	var _activityRoutes = __webpack_require__(20);
 
 	var _activityRoutes2 = _interopRequireDefault(_activityRoutes);
 
-	var _parentRoutes = __webpack_require__(23);
+	var _parentRoutes = __webpack_require__(22);
 
 	var _parentRoutes2 = _interopRequireDefault(_parentRoutes);
 
-	var _config = __webpack_require__(21);
+	var _config = __webpack_require__(24);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -104,20 +108,22 @@ module.exports =
 	var app = (0, _express2.default)();
 	var mongoUtil = new _utilMongodb2.default(_config2.default.get('db.url'));
 
+	app.use((0, _cors2.default)());
 	app.use(_bodyParser2.default.urlencoded({ extended: true }));
 	app.use(_bodyParser2.default.json());
 	app.use(_express2.default.static('static'));
 
 	app.use('/api/location', _locationRoutes2.default);
-	app.use('/api/student', _studentRoutes2.default);
+	// app.use('/api/student', studentRoutes);
 	app.use('/api/newsletter', _newsletterRoutes2.default);
 	app.use('/api/document', _documentRoutes2.default);
 	app.use('/api/activity', _activityRoutes2.default);
 	app.use('/api/parent', _parentRoutes2.default);
 
-	_locationRoutes2.default.use('/:locationId/period', _periodRoutes2.default);
-	_periodRoutes2.default.use('/:periodId/grade', _gradeRoutes2.default);
+	_locationRoutes2.default.use('/:locationId/level', _levelRoutes2.default);
+	_levelRoutes2.default.use('/:levelId/grade', _gradeRoutes2.default);
 	_gradeRoutes2.default.use('/:gradeId/group', _groupRoutes2.default);
+	_groupRoutes2.default.use('/:groupId/student', _studentRoutes2.default);
 
 	app.get('/health', function (req, res) {
 	  res.writeHead(200);
@@ -160,6 +166,12 @@ module.exports =
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	module.exports = require("cors");
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -172,7 +184,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _locationController = __webpack_require__(5);
+	var _locationController = __webpack_require__(6);
 
 	var _locationController2 = _interopRequireDefault(_locationController);
 
@@ -257,7 +269,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -272,7 +284,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -385,13 +397,13 @@ module.exports =
 	exports.default = LocationController;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = require("lodash");
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -404,18 +416,18 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _periodController = __webpack_require__(8);
+	var _levelController = __webpack_require__(9);
 
-	var _periodController2 = _interopRequireDefault(_periodController);
+	var _levelController2 = _interopRequireDefault(_levelController);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/*eslint-disable */
 	var router = _express2.default.Router({ mergeParams: true });
 	/*eslint-enable */
-	var controller = new _periodController2.default();
+	var controller = new _levelController2.default();
 	var parentId = 'locationId';
-	var identiyId = 'periodId';
+	var identiyId = 'levelId';
 
 	router.get('/', function (req, res) {
 	  controller.list(req.params[parentId]).then(function (data) {
@@ -490,7 +502,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -505,7 +517,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -513,22 +525,22 @@ module.exports =
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var PeriodController = function () {
-	  function PeriodController() {
-	    _classCallCheck(this, PeriodController);
+	var LevelController = function () {
+	  function LevelController() {
+	    _classCallCheck(this, LevelController);
 
 	    this.mongoUtil = new _utilMongodb2.default();
-	    this.collectionName = 'period';
+	    this.collectionName = 'level';
 	  }
 
-	  _createClass(PeriodController, [{
+	  _createClass(LevelController, [{
 	    key: 'list',
-	    value: function list(locationId) {
+	    value: function list(parentId) {
 	      var _this = this;
 
 	      var filter = {
 	        status: true,
-	        locationId: locationId
+	        parentId: parentId
 	      };
 	      return new Promise(function (resolve, reject) {
 	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
@@ -540,11 +552,11 @@ module.exports =
 	    }
 	  }, {
 	    key: 'get',
-	    value: function get(periodId) {
+	    value: function get(levelId) {
 	      var _this2 = this;
 
 	      var filter = {
-	        _id: this.mongoUtil.getObjectID(periodId),
+	        _id: this.mongoUtil.getObjectID(levelId),
 	        status: true
 	      };
 	      return new Promise(function (resolve, reject) {
@@ -557,11 +569,11 @@ module.exports =
 	    }
 	  }, {
 	    key: 'save',
-	    value: function save(locationId, data) {
+	    value: function save(parentId, data) {
 	      var _this3 = this;
 
 	      var newData = _lodash2.default.assign({}, data, {
-	        locationId: locationId,
+	        parentId: parentId,
 	        status: true,
 	        created: new Date()
 	      });
@@ -575,11 +587,11 @@ module.exports =
 	    }
 	  }, {
 	    key: 'update',
-	    value: function update(periodId, data) {
+	    value: function update(levelId, data) {
 	      var _this4 = this;
 
 	      var filter = {
-	        _id: this.mongoUtil.getObjectID(periodId)
+	        _id: this.mongoUtil.getObjectID(levelId)
 	      };
 	      var newData = _lodash2.default.assign({}, data, {
 	        updated: new Date()
@@ -594,12 +606,12 @@ module.exports =
 	    }
 	  }, {
 	    key: 'delete',
-	    value: function _delete(periodId) {
+	    value: function _delete(levelId) {
 	      var _this5 = this;
 
 	      return new Promise(function (resolve, reject) {
 	        var filter = {
-	          _id: _this5.mongoUtil.getObjectID(periodId)
+	          _id: _this5.mongoUtil.getObjectID(levelId)
 	        };
 	        var newData = _lodash2.default.assign({}, {
 	          deleted: new Date(),
@@ -614,13 +626,13 @@ module.exports =
 	    }
 	  }]);
 
-	  return PeriodController;
+	  return LevelController;
 	}();
 
-	exports.default = PeriodController;
+	exports.default = LevelController;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -633,7 +645,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _gradeController = __webpack_require__(10);
+	var _gradeController = __webpack_require__(11);
 
 	var _gradeController2 = _interopRequireDefault(_gradeController);
 
@@ -643,7 +655,7 @@ module.exports =
 	var router = _express2.default.Router({ mergeParams: true });
 	/*eslint-enable */
 	var controller = new _gradeController2.default();
-	var parentId = 'periodId';
+	var parentId = 'levelId';
 	var identiyId = 'gradeId';
 
 	router.get('/', function (req, res) {
@@ -719,7 +731,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -734,7 +746,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -849,7 +861,7 @@ module.exports =
 	exports.default = GradeController;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -862,7 +874,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _groupController = __webpack_require__(12);
+	var _groupController = __webpack_require__(13);
 
 	var _groupController2 = _interopRequireDefault(_groupController);
 
@@ -948,7 +960,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -963,7 +975,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -1078,7 +1090,7 @@ module.exports =
 	exports.default = GroupController;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1091,7 +1103,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _studentController = __webpack_require__(14);
+	var _studentController = __webpack_require__(15);
 
 	var _studentController2 = _interopRequireDefault(_studentController);
 
@@ -1101,10 +1113,11 @@ module.exports =
 	var router = _express2.default.Router({ mergeParams: true });
 	/*eslint-enable */
 	var controller = new _studentController2.default();
+	var parentId = 'groupId';
 	var identiyId = 'studentId';
 
 	router.get('/', function (req, res) {
-	  controller.list().then(function (data) {
+	  controller.list(req.params[parentId]).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -1132,7 +1145,7 @@ module.exports =
 	});
 
 	router.post('/', function (req, res) {
-	  controller.save(req.body).then(function (data) {
+	  controller.save(req.params[parentId], req.body).then(function (data) {
 	    res.json({
 	      status: true,
 	      data: data
@@ -1176,7 +1189,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1191,7 +1204,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -1209,15 +1222,15 @@ module.exports =
 
 	  _createClass(StudentController, [{
 	    key: 'list',
-	    value: function list(parentId) {
+	    value: function list(groupId) {
 	      var _this = this;
 
 	      var filter = {
 	        status: true,
-	        parentId: parentId
+	        group: { $in: [groupId] }
 	      };
 	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	        _this.mongoUtil.find('student', filter, {}).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);
@@ -1243,12 +1256,13 @@ module.exports =
 	    }
 	  }, {
 	    key: 'save',
-	    value: function save(data) {
+	    value: function save(parentId, data) {
 	      var _this3 = this;
 
 	      var newData = _lodash2.default.assign({}, data, {
 	        status: true,
-	        created: new Date()
+	        created: new Date(),
+	        group: [parentId]
 	      });
 	      return new Promise(function (resolve, reject) {
 	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
@@ -1305,7 +1319,7 @@ module.exports =
 	exports.default = StudentController;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1318,7 +1332,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _newsletterController = __webpack_require__(16);
+	var _newsletterController = __webpack_require__(17);
 
 	var _newsletterController2 = _interopRequireDefault(_newsletterController);
 
@@ -1403,7 +1417,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1418,7 +1432,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -1531,7 +1545,7 @@ module.exports =
 	exports.default = NewsletterController;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1544,7 +1558,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _documentController = __webpack_require__(18);
+	var _documentController = __webpack_require__(19);
 
 	var _documentController2 = _interopRequireDefault(_documentController);
 
@@ -1629,7 +1643,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1644,7 +1658,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -1757,7 +1771,7 @@ module.exports =
 	exports.default = DocumentController;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1770,7 +1784,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _activityController = __webpack_require__(20);
+	var _activityController = __webpack_require__(21);
 
 	var _activityController2 = _interopRequireDefault(_activityController);
 
@@ -1855,7 +1869,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1870,7 +1884,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -1983,110 +1997,7 @@ module.exports =
 	exports.default = ActivityController;
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _convict = __webpack_require__(22);
-
-	var _convict2 = _interopRequireDefault(_convict);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Define a schema
-	var config = (0, _convict2.default)({
-	  env: {
-	    doc: 'The applicaton environment.',
-	    format: ['production', 'development', 'test'],
-	    default: 'development',
-	    env: 'NODE_ENV'
-	  },
-	  ipaddress: {
-	    doc: 'The IP address to bind.',
-	    format: 'ipaddress',
-	    default: '127.0.0.1',
-	    env: 'NODE_IP'
-	  },
-	  port: {
-	    doc: 'The port to bind.',
-	    format: 'port',
-	    default: 3000,
-	    env: 'NODE_PORT'
-	  },
-	  db: {
-	    url: {
-	      doc: 'Database hostname',
-	      format: String,
-	      default: 'mongodb://localhost:27017/kolbe',
-	      env: 'DB_URL'
-	    }
-	  },
-	  loggly: {
-	    token: {
-	      doc: 'Loggly token',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_TOKEN'
-	    },
-	    subdomain: {
-	      doc: 'Loggly subdomain',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_SUBDOMIAN'
-	    },
-	    username: {
-	      doc: 'Loggly username',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_USERNAME'
-	    },
-	    password: {
-	      doc: 'Loggly password',
-	      format: String,
-	      default: '',
-	      env: 'LOGGLY_PASSWORD'
-	    }
-	  },
-	  alchemy: {
-	    apiUrl: {
-	      doc: 'Alchemy API URL',
-	      format: String,
-	      default: '',
-	      env: 'ALCHEMY_API_URL'
-	    },
-	    token: {
-	      doc: 'Alchemy token',
-	      format: String,
-	      default: '',
-	      env: 'ALCHEMY_TOKEN'
-	    }
-	  },
-	  secureToken: {
-	    doc: 'Our token',
-	    format: String,
-	    default: '',
-	    env: 'MINT_TOKEN'
-	  }
-	});
-
-	// Perform validation
-	config.validate({ strict: true });
-
-	exports.default = config;
-
-/***/ },
 /* 22 */
-/***/ function(module, exports) {
-
-	module.exports = require("convict");
-
-/***/ },
-/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2099,7 +2010,7 @@ module.exports =
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _parentController = __webpack_require__(24);
+	var _parentController = __webpack_require__(23);
 
 	var _parentController2 = _interopRequireDefault(_parentController);
 
@@ -2184,7 +2095,7 @@ module.exports =
 	exports.default = router;
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2199,7 +2110,7 @@ module.exports =
 
 	var _utilMongodb2 = _interopRequireDefault(_utilMongodb);
 
-	var _lodash = __webpack_require__(6);
+	var _lodash = __webpack_require__(7);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -2310,6 +2221,101 @@ module.exports =
 	}();
 
 	exports.default = ParentController;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var convict = __webpack_require__(25);
+
+	// Define a schema
+	var config = convict({
+	  env: {
+	    doc: 'The applicaton environment.',
+	    format: ['production', 'development', 'test'],
+	    default: 'development',
+	    env: 'NODE_ENV'
+	  },
+	  ipaddress: {
+	    doc: 'The IP address to bind.',
+	    format: 'ipaddress',
+	    default: '127.0.0.1',
+	    env: 'NODE_IP'
+	  },
+	  port: {
+	    doc: 'The port to bind.',
+	    format: 'port',
+	    default: 3000,
+	    env: 'NODE_PORT'
+	  },
+	  db: {
+	    url: {
+	      doc: 'Database hostname',
+	      format: String,
+	      default: 'mongodb://localhost:27017/kolbe',
+	      env: 'DB_URL'
+	    }
+	  },
+	  loggly: {
+	    token: {
+	      doc: 'Loggly token',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_TOKEN'
+	    },
+	    subdomain: {
+	      doc: 'Loggly subdomain',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_SUBDOMIAN'
+	    },
+	    username: {
+	      doc: 'Loggly username',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_USERNAME'
+	    },
+	    password: {
+	      doc: 'Loggly password',
+	      format: String,
+	      default: '',
+	      env: 'LOGGLY_PASSWORD'
+	    }
+	  },
+	  alchemy: {
+	    apiUrl: {
+	      doc: 'Alchemy API URL',
+	      format: String,
+	      default: '',
+	      env: 'ALCHEMY_API_URL'
+	    },
+	    token: {
+	      doc: 'Alchemy token',
+	      format: String,
+	      default: '',
+	      env: 'ALCHEMY_TOKEN'
+	    }
+	  },
+	  secureToken: {
+	    doc: 'Our token',
+	    format: String,
+	    default: '',
+	    env: 'MINT_TOKEN'
+	  }
+	});
+
+	// Perform validation
+	config.validate({ strict: true });
+
+	module.exports = config;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	module.exports = require("convict");
 
 /***/ }
 /******/ ]);

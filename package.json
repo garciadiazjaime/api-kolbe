@@ -9,7 +9,8 @@
     "test": "npm run lint && npm run unittest",
     "start": "node --use_strict start.js",
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive test",
-    "webpack": "webpack --progress --colors"
+    "webpack": "webpack --progress --colors",
+    "reset-db": "node src/scripts/resetDataBase"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "cors": "^2.8.1",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-loader": "^1.3.0",

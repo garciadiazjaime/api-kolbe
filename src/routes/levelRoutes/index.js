@@ -1,12 +1,12 @@
 import express from 'express';
-import PeriodController from '../../controllers/periodController';
+import LevelController from '../../controllers/levelController';
 
 /*eslint-disable */
 const router = express.Router({mergeParams: true});
 /*eslint-enable */
-const controller = new PeriodController();
+const controller = new LevelController();
 const parentId = 'locationId';
-const identiyId = 'periodId';
+const identiyId = 'levelId';
 
 router.get('/', (req, res) => {
   controller

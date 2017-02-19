@@ -5,11 +5,12 @@ import StudentController from '../../controllers/studentController';
 const router = express.Router({mergeParams: true});
 /*eslint-enable */
 const controller = new StudentController();
+const parentId = 'groupId';
 const identiyId = 'studentId';
 
 router.get('/', (req, res) => {
   controller
-    .list()
+    .list(req.params[parentId])
     .then((data) => {
       res.json({
         status: true,
@@ -43,7 +44,7 @@ router.get(`/:${identiyId}`, (req, res) => {
 
 router.post('/', (req, res) => {
   controller
-    .save(req.body)
+    .save(req.params[parentId], req.body)
     .then((data) => {
       res.json({
         status: true,
