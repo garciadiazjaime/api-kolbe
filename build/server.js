@@ -308,8 +308,11 @@ module.exports =
 	      var filter = {
 	        status: true
 	      };
+	      var options = {
+	        sort: 'weight'
+	      };
 	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	        _this.mongoUtil.find(_this.collectionName, filter, options).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);
@@ -542,8 +545,11 @@ module.exports =
 	        status: true,
 	        parentId: parentId
 	      };
+	      var options = {
+	        sort: 'weight'
+	      };
 	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	        _this.mongoUtil.find(_this.collectionName, filter, options).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);
@@ -771,8 +777,11 @@ module.exports =
 	        status: true,
 	        parentId: parentId
 	      };
+	      var options = {
+	        sort: 'weight'
+	      };
 	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	        _this.mongoUtil.find(_this.collectionName, filter, options).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);
@@ -1000,8 +1009,11 @@ module.exports =
 	        status: true,
 	        parentId: parentId
 	      };
+	      var options = {
+	        sort: 'weight'
+	      };
 	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find(_this.collectionName, filter, {}).then(function (results) {
+	        _this.mongoUtil.find(_this.collectionName, filter, options).then(function (results) {
 	          return resolve(results);
 	        }).catch(function (err) {
 	          return reject(err);

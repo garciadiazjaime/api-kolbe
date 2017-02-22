@@ -7,10 +7,12 @@ const collections = ['location', 'activity', 'document', 'grade', 'group', 'leve
 const locations = require('./data/locations');
 const levels = require('./data/levels');
 const grades = require('./data/grades');
+const groups = require('./data/groups');
 
 mongoUtil
   .openConnection()
   .then(() => {
+    console.log('==== start');
     console.log('DB open');
     return collections.map((item) => {
       return mongoUtil.dropCollection(item);
@@ -77,6 +79,27 @@ mongoUtil
     return Promise.all(promises)
   })
   .then((data) => {
+    const promises = [];
+    data.map((results, gradeIndex) => {
+      const level = results.data.ops.pop().name;
+      const parentId = results.data.insertedIds.pop();
+      groups.map((item, groupIndex) => {
+        const document = _.assign({}, item, {
+          parentId: parentId.toString(),
+          status: true,
+          created: Date(),
+        });
+        promises.push(mongoUtil.insert('group', document));
+      });
+    });
+    return promises;
+  })
+  .then((promises) => {
+    console.log('groups created');
+    return Promise.all(promises)
+  })
+  .then((data) => {
+    console.log('==== finish');
     mongoUtil.closeConnection();
     process.exit(0);
   });

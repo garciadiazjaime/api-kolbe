@@ -13,8 +13,11 @@ export default class GroupController {
       status: true,
       parentId,
     };
+    const options = {
+      sort: 'weight',
+    };
     return new Promise((resolve, reject) => {
-      this.mongoUtil.find(this.collectionName, filter, {})
+      this.mongoUtil.find(this.collectionName, filter, options)
           .then(results => resolve(results))
           .catch(err => reject(err));
     });
