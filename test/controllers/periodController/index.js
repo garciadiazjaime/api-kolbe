@@ -4,14 +4,14 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
-import PeriodController from '../../../src/controllers/periodController';
+import LevelController from '../../../src/controllers/levelController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe('PeriodController', () => {
-  const controllers = new PeriodController();
+describe('LevelController', () => {
+  const controllers = new LevelController();
 
   describe("#list", () => {
     describe("valid case", () => {

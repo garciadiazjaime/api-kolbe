@@ -1,3 +1,5 @@
+/* eslint max-len: [2, 500, 4] */
+
 const MongoUtil = require('util-mongodb').default;
 const _ = require('lodash');
 const config = require('../../config');
@@ -11,30 +13,16 @@ const groups = require('./data/groups');
 
 mongoUtil
   .openConnection()
-  .then(() => {
-    console.log('==== start');
-    console.log('DB open');
-    return collections.map((item) => {
-      return mongoUtil.dropCollection(item);
+  .then(() => collections.map(item => mongoUtil.dropCollection(item)))
+  .then(promises => Promise.all(promises))
+  .then(() => locations.map((item) => {
+    const document = _.assign({}, item, {
+      status: true,
+      created: Date(),
     });
-  })
-  .then((promises) => {
-    console.log('collections dropped');
-    return Promise.all(promises)
-  })
-  .then(() => {
-    return locations.map((item) => {
-      const document = _.assign({}, item, {
-        status: true,
-        created: Date(),
-      });
-      return mongoUtil.insert('location', document);
-    });
-  })
-  .then((promises) => {
-    console.log('locations created');
-    return Promise.all(promises)
-  })
+    return mongoUtil.insert('location', document);
+  }))
+  .then(promises => Promise.all(promises))
   .then((data) => {
     const promises = [];
     data.map((results, locationIndex) => {
@@ -48,17 +36,16 @@ mongoUtil
           });
           promises.push(mongoUtil.insert('level', document));
         }
+        return null;
       });
+      return null;
     });
     return promises;
   })
-  .then((promises) => {
-    console.log('levels created');
-    return Promise.all(promises)
-  })
+  .then(promises => Promise.all(promises))
   .then((data) => {
     const promises = [];
-    data.map((results, levelIndex) => {
+    data.map((results) => {
       const level = results.data.ops.pop().name;
       const parentId = results.data.insertedIds.pop();
       grades.map((item, gradeIndex) => {
@@ -70,36 +57,33 @@ mongoUtil
           });
           promises.push(mongoUtil.insert('grade', document));
         }
+        return null;
       });
+      return null;
     });
     return promises;
   })
-  .then((promises) => {
-    console.log('grades created');
-    return Promise.all(promises)
-  })
+  .then(promises => Promise.all(promises))
   .then((data) => {
     const promises = [];
-    data.map((results, gradeIndex) => {
-      const level = results.data.ops.pop().name;
+    data.map((results) => {
       const parentId = results.data.insertedIds.pop();
-      groups.map((item, groupIndex) => {
+      groups.map((item) => {
         const document = _.assign({}, item, {
           parentId: parentId.toString(),
           status: true,
           created: Date(),
         });
         promises.push(mongoUtil.insert('group', document));
+        return null;
       });
+      return null;
     });
     return promises;
   })
-  .then((promises) => {
-    console.log('groups created');
-    return Promise.all(promises)
-  })
-  .then((data) => {
-    console.log('==== finish');
+  .then(promises => Promise.all(promises))
+  .then(() => {
+    console.log('==== Done');
     mongoUtil.closeConnection();
     process.exit(0);
   });
