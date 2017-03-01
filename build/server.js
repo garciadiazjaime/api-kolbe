@@ -303,94 +303,54 @@ module.exports =
 	  _createClass(LocationController, [{
 	    key: 'list',
 	    value: function list() {
-	      var _this = this;
-
 	      var filter = {
 	        status: true
 	      };
 	      var options = {
 	        sort: 'weight'
 	      };
-	      return new Promise(function (resolve, reject) {
-	        _this.mongoUtil.find(_this.collectionName, filter, options).then(function (results) {
-	          return resolve(results);
-	        }).catch(function (err) {
-	          return reject(err);
-	        });
-	      });
+	      return this.mongoUtil.find(this.collectionName, filter, options);
 	    }
 	  }, {
 	    key: 'get',
 	    value: function get(locationId) {
-	      var _this2 = this;
-
 	      var filter = {
 	        _id: this.mongoUtil.getObjectID(locationId),
 	        status: true
 	      };
-	      return new Promise(function (resolve, reject) {
-	        _this2.mongoUtil.findOne(_this2.collectionName, filter).then(function (results) {
-	          return resolve(results);
-	        }).catch(function (err) {
-	          return reject(err);
-	        });
-	      });
+	      return this.mongoUtil.findOne(this.collectionName, filter);
 	    }
 	  }, {
 	    key: 'save',
 	    value: function save(data) {
-	      var _this3 = this;
-
 	      var newData = _lodash2.default.assign({}, data, {
 	        created: new Date(),
 	        status: true
 	      });
-	      return new Promise(function (resolve, reject) {
-	        _this3.mongoUtil.insert(_this3.collectionName, newData).then(function (results) {
-	          return resolve(results);
-	        }).catch(function (err) {
-	          return reject(err);
-	        });
-	      });
+	      return this.mongoUtil.insert(this.collectionName, newData);
 	    }
 	  }, {
 	    key: 'update',
 	    value: function update(locationId, data) {
-	      var _this4 = this;
-
 	      var filter = {
 	        _id: this.mongoUtil.getObjectID(locationId)
 	      };
 	      var newData = _lodash2.default.assign({}, data, {
 	        updated: new Date()
 	      });
-	      return new Promise(function (resolve, reject) {
-	        _this4.mongoUtil.update(_this4.collectionName, newData, filter).then(function (results) {
-	          return resolve(results);
-	        }).catch(function (err) {
-	          return reject(err);
-	        });
-	      });
+	      return this.mongoUtil.update(this.collectionName, newData, filter);
 	    }
 	  }, {
 	    key: 'delete',
 	    value: function _delete(locationId) {
-	      var _this5 = this;
-
-	      return new Promise(function (resolve, reject) {
-	        var filter = {
-	          _id: _this5.mongoUtil.getObjectID(locationId)
-	        };
-	        var newData = _lodash2.default.assign({}, {
-	          deleted: new Date(),
-	          status: false
-	        });
-	        _this5.mongoUtil.update(_this5.collectionName, newData, filter).then(function (results) {
-	          return resolve(results);
-	        }).catch(function (err) {
-	          return reject(err);
-	        });
+	      var filter = {
+	        _id: this.mongoUtil.getObjectID(locationId)
+	      };
+	      var newData = _lodash2.default.assign({}, {
+	        deleted: new Date(),
+	        status: false
 	      });
+	      return this.mongoUtil.update(this.collectionName, newData, filter);
 	    }
 	  }]);
 
