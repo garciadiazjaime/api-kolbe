@@ -1,19 +1,23 @@
-module.exports = [{
-  name: '1ro',
-  weight: 1,
-}, {
-  name: '2do',
-  weight: 2,
-}, {
-  name: '3ro',
-  weight: 3,
-}, {
-  name: '4to',
-  weight: 4,
-}, {
-  name: '5to',
-  weight: 5,
-}, {
-  name: '6to',
-  weight: 6,
-}];
+const groups = require('./groups');
+const MongoUtil = require('util-mongodb').default;
+
+function getGrade(name, weight) {
+  return {
+    id: MongoUtil.generateId(),
+    name,
+    weight,
+    status: true,
+    created: Date(),
+    group: groups(),
+  }
+}
+
+module.exports = function(level) {
+  switch (level) {
+    case 'PREESCOLAR':
+    case 'SECUNDARIA':
+      return [getGrade('1ro', 1), getGrade('2do', 2), getGrade('3ro', 3)];
+    default:
+      return [getGrade('1ro', 1), getGrade('2do', 2), getGrade('3ro', 3), getGrade('4to', 4), getGrade('5to', 5), getGrade('6to', 6)];
+  }
+}

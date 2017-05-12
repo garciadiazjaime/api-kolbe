@@ -2,7 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import MongoUtil from 'util-mongodb';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
 
+
+import schoolRoutes from './routes/schoolRoutes';
 import locationRoutes from './routes/locationRoutes';
 import levelRoutes from './routes/levelRoutes';
 import gradeRoutes from './routes/gradeRoutes';
@@ -21,13 +24,20 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('static'));
+app.use(fileUpload());
 
+app.use('/api/school', schoolRoutes);
 app.use('/api/location', locationRoutes);
-// app.use('/api/student', studentRoutes);
+
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/document', documentRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/parent', parentRoutes);
+
+app.use('/api/group/:groupId/activity', activityRoutes);
+app.use('/api/group/:groupId/document', documentRoutes);
+app.use('/api/group/:groupId/newsletter', newsletterRoutes);
+app.use('/api/group/:groupId/parent', parentRoutes);
 
 locationRoutes.use('/:locationId/level', levelRoutes);
 levelRoutes.use('/:levelId/grade', gradeRoutes);

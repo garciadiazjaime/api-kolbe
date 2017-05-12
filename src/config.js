@@ -74,6 +74,12 @@ const config = convict({
     default: '',
     env: 'MINT_TOKEN',
   },
+  dataFoldar: {
+    doc: 'Files',
+    format: String,
+    default: `${process.env.PWD}/data`,
+    env: 'OPENSHIFT_DATA_DIR',
+  },
 });
 
 // Perform validation

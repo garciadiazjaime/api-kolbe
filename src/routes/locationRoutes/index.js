@@ -10,13 +10,13 @@ const identiyId = 'locationId';
 router.get('/', (req, res) => {
   controller
     .list()
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -27,13 +27,13 @@ router.get('/', (req, res) => {
 router.get(`/:${identiyId}`, (req, res) => {
   controller
     .get(req.params.locationId)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -44,13 +44,13 @@ router.get(`/:${identiyId}`, (req, res) => {
 router.post('/', (req, res) => {
   controller
     .save(req.body)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -61,13 +61,13 @@ router.post('/', (req, res) => {
 router.put(`/:${identiyId}`, (req, res) => {
   controller
     .update(req.params.locationId, req.body)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -78,13 +78,30 @@ router.put(`/:${identiyId}`, (req, res) => {
 router.delete(`/:${identiyId}`, (req, res) => {
   controller
     .delete(req.params.locationId, req.body)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
+      res.json({
+        status: false,
+        error,
+      });
+    });
+});
+
+router.post(`/:${identiyId}/upload`, (req, res) => {
+  controller
+    .upload(req.params.locationId, req.files)
+    .then(data => {
+      res.json({
+        status: true,
+        data,
+      });
+    })
+    .catch(error => {
       res.json({
         status: false,
         error,

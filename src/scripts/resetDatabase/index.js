@@ -15,7 +15,7 @@ mongoUtil
   .openConnection()
   .then(() => collections.map(item => mongoUtil.dropCollection(item)))
   .then(promises => Promise.all(promises))
-  .then(() => locations.map((item) => {
+  .then(() => locations.map(item => {
     const document = _.assign({}, item, {
       status: true,
       created: Date(),
@@ -74,7 +74,7 @@ mongoUtil
           status: true,
           created: Date(),
         });
-        promises.push(mongoUtil.insert('group', document));
+        promises.push(mongoUtil.insert('class', document));
         return null;
       });
       return null;
@@ -86,9 +86,7 @@ mongoUtil
     console.log('==== Done');
     mongoUtil.closeConnection();
     process.exit(0);
+  })
+  .catch(errors => {
+    console.log('Error', errors);
   });
-
-
-  // () => {
-  //   console.log('Error :: No DB connection open');
-  // }

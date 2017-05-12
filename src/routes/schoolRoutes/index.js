@@ -1,22 +1,22 @@
 import express from 'express';
-import ActivityController from '../../controllers/activityController';
+import SchoolController from '../../controllers/schoolController';
 
 /*eslint-disable */
-const router = express.Router({mergeParams: true});
+const router = express.Router();
 /*eslint-enable */
-const controller = new ActivityController();
-const identiyId = 'activityId';
+const controller = new SchoolController();
+const identiyId = 'schoolId';
 
 router.get('/', (req, res) => {
   controller
-    .list(req.params)
-    .then((data) => {
+    .list()
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -26,14 +26,14 @@ router.get('/', (req, res) => {
 
 router.get(`/:${identiyId}`, (req, res) => {
   controller
-    .get(req.params[identiyId])
-    .then((data) => {
+    .get(req.params.schoolId)
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -44,13 +44,13 @@ router.get(`/:${identiyId}`, (req, res) => {
 router.post('/', (req, res) => {
   controller
     .save(req.body)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -60,14 +60,14 @@ router.post('/', (req, res) => {
 
 router.put(`/:${identiyId}`, (req, res) => {
   controller
-    .update(req.params[identiyId], req.body)
-    .then((data) => {
+    .update(req.params.locationId, req.body)
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -77,14 +77,14 @@ router.put(`/:${identiyId}`, (req, res) => {
 
 router.delete(`/:${identiyId}`, (req, res) => {
   controller
-    .delete(req.params[identiyId], req.body)
-    .then((data) => {
+    .delete(req.params.locationId, req.body)
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,
