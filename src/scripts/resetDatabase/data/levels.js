@@ -12,11 +12,16 @@ function getLevel(name, weight) {
   };
 }
 
-module.exports = function (location) {
+module.exports = (location) => {
   switch (location.toUpperCase()) {
     case 'SANTA_FE':
-      return [getLevel('Preescolar', 1), getLevel('Primaria', 2), getLevel('Secundaria', 3), getLevel('Preparatoria')];
+      return [getLevel('Preescolar', 1),
+      getLevel('Primaria', 2),
+      getLevel('Secundaria', 3),
+      getLevel('Preparatoria')];
     default:
-      return [getLevel('Preescolar', 1), getLevel('Primaria', 2), getLevel('Secundaria', 3)];
+      return [getLevel('Preescolar', 1),
+      getLevel('Primaria', 2),
+      getLevel('Secundaria', 3)];
   }
-}
+};

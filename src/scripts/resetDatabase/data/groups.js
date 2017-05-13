@@ -7,9 +7,7 @@ function getGroup(name, weight) {
     weight,
     status: true,
     created: Date(),
-  }
+  };
 }
 
-module.exports = function() {
-  return [getGroup('A', 1), getGroup('B', 2)];
-}
+module.exports = () => [getGroup('A', 1), getGroup('B', 2)];
