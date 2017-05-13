@@ -4,17 +4,17 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
-import PeriodController from '../../../src/controllers/periodController';
+import LevelController from '../../../src/controllers/levelController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe('PeriodController', () => {
-  const controllers = new PeriodController();
+describe('LevelController', () => {
+  const controllers = new LevelController();
 
-  describe("#list", () => {
-    describe("valid case", () => {
+  describe('#list', () => {
+    describe('valid case', () => {
       const validResponse = [{}];
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -29,7 +29,7 @@ describe('PeriodController', () => {
       it('resolves a promise', () => expect(controllers.list()).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -45,10 +45,10 @@ describe('PeriodController', () => {
     });
   });
 
-  describe("#get", () => {
+  describe('#get', () => {
     const locationId = 1;
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -63,7 +63,7 @@ describe('PeriodController', () => {
       it('resolves a promise', () => expect(controllers.get(locationId)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -79,10 +79,10 @@ describe('PeriodController', () => {
     });
   });
 
-  describe("#save", () => {
+  describe('#save', () => {
     const data = {};
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -97,7 +97,7 @@ describe('PeriodController', () => {
       it('resolves a promise', () => expect(controllers.save(data)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -113,11 +113,11 @@ describe('PeriodController', () => {
     });
   });
 
-  describe("#update", () => {
+  describe('#update', () => {
     const locationId = 1;
     const data = {};
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -132,7 +132,7 @@ describe('PeriodController', () => {
       it('resolves a promise', () => expect(controllers.update(locationId, data)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -148,11 +148,11 @@ describe('PeriodController', () => {
     });
   });
 
-  describe("#delete", () => {
+  describe('#delete', () => {
     const locationId = 1;
     const validResponse = {};
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
@@ -166,7 +166,7 @@ describe('PeriodController', () => {
       it('resolves a promise', () => expect(controllers.delete(locationId)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 

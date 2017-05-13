@@ -9,7 +9,7 @@ const identiyId = 'documentId';
 
 router.get('/', (req, res) => {
   controller
-    .list()
+    .list(req.params)
     .then((data) => {
       res.json({
         status: true,

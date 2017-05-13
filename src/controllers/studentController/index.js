@@ -8,13 +8,13 @@ export default class StudentController {
     this.collectionName = 'student';
   }
 
-  list(parentId) {
+  list(groupId) {
     const filter = {
       status: true,
-      parentId,
+      group: { $in: [groupId] },
     };
     return new Promise((resolve, reject) => {
-      this.mongoUtil.find(this.collectionName, filter, {})
+      this.mongoUtil.find('student', filter, {})
           .then(results => resolve(results))
           .catch(err => reject(err));
     });
@@ -33,10 +33,11 @@ export default class StudentController {
     });
   }
 
-  save(data) {
+  save(parentId, data) {
     const newData = _.assign({}, data, {
       status: true,
       created: new Date(),
+      group: [parentId],
     });
     return new Promise((resolve, reject) => {
       this.mongoUtil

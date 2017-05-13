@@ -1,12 +1,12 @@
 import express from 'express';
-import GradeController from '../../controllers/gradeController';
+import LevelController from '../../controllers/levelController';
 
 /*eslint-disable */
 const router = express.Router({mergeParams: true});
 /*eslint-enable */
-const controller = new GradeController();
-const parentId = 'levelId';
-const identiyId = 'gradeId';
+const controller = new LevelController();
+const parentId = 'locationId';
+const identiyId = 'levelId';
 
 router.get('/', (req, res) => {
   controller

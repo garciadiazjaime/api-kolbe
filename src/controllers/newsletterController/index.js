@@ -8,10 +8,13 @@ export default class NewsletterController {
     this.collectionName = 'newsletter';
   }
 
-  list() {
+  list(params) {
     const filter = {
       status: true,
     };
+    if (params.groupId) {
+      filter.groupId = params.groupId;
+    }
     return new Promise((resolve, reject) => {
       this.mongoUtil.find(this.collectionName, filter, {})
           .then(results => resolve(results))

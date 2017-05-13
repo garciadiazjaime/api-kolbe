@@ -1,4 +1,4 @@
-import convict from 'convict';
+const convict = require('convict');
 
 // Define a schema
 const config = convict({
@@ -74,9 +74,15 @@ const config = convict({
     default: '',
     env: 'MINT_TOKEN',
   },
+  dataFoldar: {
+    doc: 'Files',
+    format: String,
+    default: `${process.env.PWD}/data`,
+    env: 'OPENSHIFT_DATA_DIR',
+  },
 });
 
 // Perform validation
 config.validate({ strict: true });
 
-export default config;
+module.exports = config;

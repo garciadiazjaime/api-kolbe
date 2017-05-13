@@ -13,8 +13,8 @@ chai.use(chaiAsPromised);
 describe('GradeController', () => {
   const controller = new GradeController();
 
-  describe("#list", () => {
-    describe("valid case", () => {
+  describe('#list', () => {
+    describe('valid case', () => {
       const validResponse = [{}];
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -29,7 +29,7 @@ describe('GradeController', () => {
       it('resolves a promise', () => expect(controller.list()).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -45,10 +45,10 @@ describe('GradeController', () => {
     });
   });
 
-  describe("#get", () => {
+  describe('#get', () => {
     const locationId = 1;
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -63,7 +63,7 @@ describe('GradeController', () => {
       it('resolves a promise', () => expect(controller.get(locationId)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -79,10 +79,10 @@ describe('GradeController', () => {
     });
   });
 
-  describe("#save", () => {
+  describe('#save', () => {
     const data = {};
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -97,7 +97,7 @@ describe('GradeController', () => {
       it('resolves a promise', () => expect(controller.save(data)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -113,11 +113,11 @@ describe('GradeController', () => {
     });
   });
 
-  describe("#update", () => {
+  describe('#update', () => {
     const locationId = 1;
     const data = {};
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
 
@@ -132,7 +132,7 @@ describe('GradeController', () => {
       it('resolves a promise', () => expect(controller.update(locationId, data)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
@@ -148,11 +148,11 @@ describe('GradeController', () => {
     });
   });
 
-  describe("#delete", () => {
+  describe('#delete', () => {
     const locationId = 1;
     const validResponse = {};
 
-    describe("valid case", () => {
+    describe('valid case', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
@@ -166,7 +166,7 @@ describe('GradeController', () => {
       it('resolves a promise', () => expect(controller.delete(locationId)).to.eventually.equal(validResponse));
     });
 
-    describe("invalid case", () => {
+    describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
