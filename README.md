@@ -35,3 +35,16 @@ rhc env list -a app
 
 Code to increase jslint max line length limit
 /* eslint max-len: [2, 500, 4] */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+
+
+Queries
+db.parent.drop()
+db.student.drop()
+db.parentStudent.drop()
+db.groupStudent.drop()
+
+db.parent.find().pretty()
+db.student.find().pretty()
+db.parentStudent.find().pretty()
+db.groupStudent.find().pretty()

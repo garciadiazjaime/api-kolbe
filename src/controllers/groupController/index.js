@@ -1,11 +1,24 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
+
+import XlsxUtil from '../../utils/xlsxUtil';
+import GroupUpload from '../../utils/groupUpload';
+import StudentController from '../studentController';
+import ParentController from '../parentController';
+import ParentStudentController from '../parentStudentController';
+import GroupStudentController from '../groupStudentController';
 
 export default class GroupController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
     this.collectionName = 'group';
+    this.groupUpload = new GroupUpload();
+    this.studentController = new StudentController();
+    this.parentController = new ParentController();
+    this.parentStudentController = new ParentStudentController();
+    this.groupStudentController = new GroupStudentController();
   }
 
   list(parentId) {
@@ -79,5 +92,40 @@ export default class GroupController {
         .then(results => resolve(results))
         .catch(err => reject(err));
     });
+  }
+
+  upload(identityId, file) {
+    return new Promise((resolve, reject) => {
+      try {
+        const { data } = file;
+        const dataFromFile = XlsxUtil.parseBufferToJson(data.data).pop();
+        if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
+          const promises = dataFromFile.data.map((item, index) => {
+            if (index === 0) {
+              this.groupUpload.setColumns(item);
+            } else if (index < 3) {
+              const entities = this.groupUpload.getEntities(item);
+              return this.uploadHelper(identityId, entities);
+            }
+            return null;
+          });
+          Promise.all(promises).then(() => resolve('saved'));
+        } else {
+          reject('wrong file');
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  uploadHelper(identityId, entities) {
+    return Promise.all([
+      this.parentController.upload(entities.parent),
+      this.studentController.upload(entities.student),
+    ]).then((results) => Promise.all([
+      this.parentStudentController.upload(results[0], results[1]),
+      this.groupStudentController.upload(identityId, results[1]),
+    ]));
   }
 }

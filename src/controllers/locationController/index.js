@@ -2,8 +2,6 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
-import config from '../../config';
-
 export default class LocationController {
 
   constructor() {
@@ -58,19 +56,4 @@ export default class LocationController {
     return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 
-  upload(locationId, files) {
-    return new Promise((resolve, reject) => {
-      const { data } = files;
-      const dataPath = config.get('dataFoldar');
-
-      data.mv(`${dataPath}/tmp/${data.name}`, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve('file uploaded');
-        }
-        return null;
-      });
-    });
-  }
 }

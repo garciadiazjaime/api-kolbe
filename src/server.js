@@ -38,6 +38,7 @@ app.use('/api/group/:groupId/activity', activityRoutes);
 app.use('/api/group/:groupId/document', documentRoutes);
 app.use('/api/group/:groupId/newsletter', newsletterRoutes);
 app.use('/api/group/:groupId/parent', parentRoutes);
+app.use('/api/group', groupRoutes);
 
 locationRoutes.use('/:locationId/level', levelRoutes);
 levelRoutes.use('/:levelId/grade', gradeRoutes);
