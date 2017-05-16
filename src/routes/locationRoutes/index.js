@@ -92,21 +92,4 @@ router.delete(`/:${identiyId}`, (req, res) => {
     });
 });
 
-router.post(`/:${identiyId}/upload`, (req, res) => {
-  controller
-    .upload(req.params.locationId, req.files)
-    .then(data => {
-      res.json({
-        status: true,
-        data,
-      });
-    })
-    .catch(error => {
-      res.json({
-        status: false,
-        error,
-      });
-    });
-});
-
 export default router;
