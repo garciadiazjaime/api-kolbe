@@ -1,10 +1,8 @@
 /* eslint max-len: [2, 500, 4] */
-import fs from 'fs';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
-import xlsx from 'node-xlsx';
 
 import LocationController from '../../../src/controllers/locationController';
 
@@ -12,7 +10,7 @@ const { expect } = chai;
 chai.use(chaiAsPromised);
 
 
-describe.only('LocationController', () => {
+describe('LocationController', () => {
   const controller = new LocationController();
 
   describe('#list', () => {
@@ -181,37 +179,6 @@ describe.only('LocationController', () => {
       });
 
       it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejectedWith(invalidResponse));
-    });
-  });
-
-  describe.only('#upload', () => {
-    const locationId = 1;
-
-    describe('valid case', () => {
-      const promise = new Promise((resolve) => resolve(validResponse));
-
-      // beforeEach(() => {
-      //   sinon.stub(MongoUtil.prototype, 'upload', () => promise);
-      // });
-      //
-      // afterEach(() => {
-      //   MongoUtil.prototype.update.restore();
-      // });
-
-      it('resolves a promise', () => {
-        controller.upload(locationId, {
-          data: {
-            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
-          },
-        })
-        .then((results) => {
-          console.log('results', results);
-        })
-        .catch((error) => {
-          console.log('error', error);
-        });
-        // expect(controller.upload(locationId)).to.eventually.equal(validResponse)
-      });
     });
   });
 });

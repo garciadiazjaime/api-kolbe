@@ -1,4 +1,5 @@
 /* eslint max-len: [2, 500, 4] */
+import fs from 'fs';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
@@ -8,7 +9,6 @@ import GroupController from '../../../src/controllers/groupController';
 
 const { expect } = chai;
 chai.use(chaiAsPromised);
-
 
 describe('GroupController', () => {
   const controller = new GroupController();
@@ -179,6 +179,32 @@ describe('GroupController', () => {
       });
 
       it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejectedWith(invalidResponse));
+    });
+  });
+
+  describe('#upload', () => {
+    const groupId = 1;
+    const validResponse = {};
+
+    describe('valid case', () => {
+      const promise = new Promise((resolve) => resolve(validResponse));
+
+      beforeEach(() => {
+        sinon.stub(controller, 'uploadHelper', () => promise);
+      });
+
+      afterEach(() => {
+        controller.uploadHelper.restore();
+      });
+
+      it('resolves a promise', () => {
+        const promiseResults = controller.upload(groupId, {
+          data: {
+            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
+          },
+        });
+        expect(promiseResults).to.eventually.equal('saved');
+      });
     });
   });
 });

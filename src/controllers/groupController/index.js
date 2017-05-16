@@ -103,7 +103,7 @@ export default class GroupController {
           const promises = dataFromFile.data.map((item, index) => {
             if (index === 0) {
               this.groupUpload.setColumns(item);
-            } else if (index < 3) {
+            } else {
               const entities = this.groupUpload.getEntities(item);
               return this.uploadHelper(identityId, entities);
             }
