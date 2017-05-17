@@ -8,6 +8,21 @@ export default class GroupStudentController {
     this.collectionName = 'groupStudent';
   }
 
+  list(groupId) {
+    const filter = {
+      status: true,
+      groupId,
+    };
+    const options = {
+      sort: 'weight',
+    };
+    return new Promise((resolve, reject) => {
+      this.mongoUtil.find(this.collectionName, filter, options)
+          .then(results => resolve(results))
+          .catch(err => reject(err));
+    });
+  }
+
   save(groupId, studentId) {
     if (!groupId || !studentId) {
       return null;

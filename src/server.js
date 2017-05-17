@@ -11,6 +11,7 @@ import levelRoutes from './routes/levelRoutes';
 import gradeRoutes from './routes/gradeRoutes';
 import groupRoutes from './routes/groupRoutes';
 import studentRoutes from './routes/studentRoutes';
+import parentStudentRoutes from './routes/parentStudentRoutes';
 import newsletterRoutes from './routes/newsletterRoutes';
 import documentRoutes from './routes/documentRoutes';
 import activityRoutes from './routes/activityRoutes';
@@ -34,6 +35,8 @@ app.use('/api/document', documentRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/parent', parentRoutes);
 
+app.use('/api/parent/:parentId/student', parentStudentRoutes);
+
 app.use('/api/group/:groupId/activity', activityRoutes);
 app.use('/api/group/:groupId/document', documentRoutes);
 app.use('/api/group/:groupId/newsletter', newsletterRoutes);
@@ -44,6 +47,7 @@ locationRoutes.use('/:locationId/level', levelRoutes);
 levelRoutes.use('/:levelId/grade', gradeRoutes);
 gradeRoutes.use('/:gradeId/group', groupRoutes);
 groupRoutes.use('/:groupId/student', studentRoutes);
+groupRoutes.use('/:groupId/parent', parentRoutes);
 
 app.get('/health', (req, res) => {
   res.writeHead(200);
