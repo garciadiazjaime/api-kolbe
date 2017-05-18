@@ -1,11 +1,14 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import StudentController from '../studentController';
+
 export default class GroupStudentController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
     this.collectionName = 'groupStudent';
+    this.studentController = new StudentController();
   }
 
   list(groupId) {
@@ -13,14 +16,16 @@ export default class GroupStudentController {
       status: true,
       groupId,
     };
-    const options = {
-      sort: 'weight',
+    return this.mongoUtil.find(this.collectionName, filter, {})
+      .then(data => Promise.all(data.map(item => this.studentController.get(item.studentId))));
+  }
+
+  getStudents(groupId) {
+    const filter = {
+      status: true,
+      groupId,
     };
-    return new Promise((resolve, reject) => {
-      this.mongoUtil.find(this.collectionName, filter, options)
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-    });
+    return this.mongoUtil.find(this.collectionName, filter, {});
   }
 
   save(groupId, studentId) {

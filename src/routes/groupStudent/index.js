@@ -1,11 +1,11 @@
 import express from 'express';
-import ParentStudentController from '../../controllers/parentStudentController';
+import GroupStudentController from '../../controllers/groupStudentController';
 
 /*eslint-disable */
 const router = express.Router({mergeParams: true});
 /*eslint-enable */
-const controller = new ParentStudentController();
-const identiyId = 'parentId';
+const controller = new GroupStudentController();
+const identiyId = 'groupId';
 
 router.get('/', (req, res) => {
   controller

@@ -19,7 +19,7 @@ export default class ParentController {
       status: true,
     };
     if (params.groupId) {
-      return this.groupStudentController.list(params.groupId)
+      return this.groupStudentController.getStudents(params.groupId)
         .then(students => this.parentStudentController.getParentsFromStudents(students))
         .then(parents => Promise.all(
           parents.map(item => this.get(item.parentId))
