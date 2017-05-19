@@ -16,16 +16,12 @@ export default class GroupStudentController {
       status: true,
       groupId,
     };
-    return this.mongoUtil.find(this.collectionName, filter, {})
-      .then(data => Promise.all(data.map(item => this.studentController.get(item.studentId))));
+    return this.mongoUtil.find(this.collectionName, filter, {});
   }
 
   getStudents(groupId) {
-    const filter = {
-      status: true,
-      groupId,
-    };
-    return this.mongoUtil.find(this.collectionName, filter, {});
+    return this.list(groupId)
+      .then(data => Promise.all(data.map(item => this.studentController.get(item.studentId))));
   }
 
   save(groupId, studentId) {

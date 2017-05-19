@@ -35,6 +35,7 @@ app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/document', documentRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/parent', parentRoutes);
+app.use('/api/student', studentRoutes);
 
 app.use('/api/parent/:parentId/student', parentStudentRoutes);
 

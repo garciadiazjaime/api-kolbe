@@ -9,7 +9,7 @@ const identiyId = 'groupId';
 
 router.get('/', (req, res) => {
   controller
-    .list(req.params[identiyId])
+    .getStudents(req.params[identiyId])
     .then(data => res.json({ status: true, data }))
     .catch((error) => {
       res.json({
