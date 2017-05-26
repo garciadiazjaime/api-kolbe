@@ -66,7 +66,12 @@ export default class ParentController {
       deleted: new Date(),
       status: false,
     });
-    return this.mongoUtil.update(this.collectionName, newData, filter);
+    return this.parentStudentController.get(identityId)
+      .then(students => Promise.all([
+        this.groupStudentController.deleteStudents(students),
+        this.parentStudentController.delete(identityId),
+        this.mongoUtil.update(this.collectionName, newData, filter),
+      ]));
   }
 
   upload(data) {

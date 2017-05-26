@@ -14,11 +14,7 @@ export default class StudentController {
       status: true,
       group: { $in: [groupId] },
     };
-    return new Promise((resolve, reject) => {
-      this.mongoUtil.find('student', filter, {})
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-    });
+    return this.mongoUtil.find('student', filter, {});
   }
 
   get(identityId) {
@@ -26,12 +22,7 @@ export default class StudentController {
       _id: this.mongoUtil.getObjectID(identityId),
       status: true,
     };
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .findOne(this.collectionName, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return this.mongoUtil.findOne(this.collectionName, filter);
   }
 
   save(data) {
@@ -52,28 +43,18 @@ export default class StudentController {
     const newData = _.assign({}, data, {
       updated: new Date(),
     });
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 
   delete(identityId) {
-    return new Promise((resolve, reject) => {
-      const filter = {
-        _id: this.mongoUtil.getObjectID(identityId),
-      };
-      const newData = _.assign({}, {
-        deleted: new Date(),
-        status: false,
-      });
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+    };
+    const newData = _.assign({}, {
+      deleted: new Date(),
+      status: false,
     });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 
   upload(data) {

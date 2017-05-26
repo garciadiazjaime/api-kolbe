@@ -49,4 +49,21 @@ export default class GroupStudentController {
   upsert(entity, groupId, studentId) {
     return !entity ? this.save(groupId, studentId) : entity;
   }
+
+  deleteStudents(students) {
+    const promises = students.map((item) => {
+      const filter = {
+        studentId: item.studentId,
+      };
+      const newData = _.assign({}, {
+        deleted: new Date(),
+        status: false,
+      });
+      return Promise.all([
+        this.mongoUtil.update(this.collectionName, newData, filter),
+        this.studentController.delete(item.studentId.toString()),
+      ]);
+    });
+    return Promise.all(promises);
+  }
 }

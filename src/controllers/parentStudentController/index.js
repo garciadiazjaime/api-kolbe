@@ -20,6 +20,14 @@ export default class ParentStudentController {
       .then(data => Promise.all(data.map(item => this.studentController.get(item.studentId))));
   }
 
+  get(parentId) {
+    const filter = {
+      status: true,
+      parentId: this.mongoUtil.getObjectID(parentId),
+    };
+    return this.mongoUtil.find(this.collectionName, filter, {});
+  }
+
   save(parentId, studentId) {
     if (!parentId || !studentId) {
       return null;
@@ -58,5 +66,17 @@ export default class ParentStudentController {
       return this.mongoUtil.findOne(this.collectionName, filter);
     });
     return Promise.all(promises);
+  }
+
+  delete(parentId) {
+    const filter = {
+      status: true,
+      parentId: this.mongoUtil.getObjectID(parentId),
+    };
+    const newData = _.assign({}, {
+      deleted: new Date(),
+      status: false,
+    });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 }
