@@ -1,11 +1,14 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import FileUtil from '../../utils/fileUtil';
+
 export default class DocumentController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
     this.collectionName = 'document';
+    this.fileUtil = new FileUtil();
   }
 
   list(params) {
@@ -15,11 +18,7 @@ export default class DocumentController {
     if (params.groupId) {
       filter.groupId = params.groupId;
     }
-    return new Promise((resolve, reject) => {
-      this.mongoUtil.find(this.collectionName, filter, {})
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-    });
+    return this.mongoUtil.find(this.collectionName, filter, {});
   }
 
   get(identityId) {
@@ -27,55 +26,46 @@ export default class DocumentController {
       _id: this.mongoUtil.getObjectID(identityId),
       status: true,
     };
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .findOne(this.collectionName, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return this.mongoUtil.findOne(this.collectionName, filter);
   }
 
-  save(data) {
-    const newData = _.assign({}, data, {
+  save(groupId, data, files) {
+    const newData = _.assign({}, JSON.parse(data.data), {
       status: true,
       created: new Date(),
+      groupId,
     });
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .insert(this.collectionName, newData)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return this.fileUtil.save(files.file)
+      .then((fileName) => {
+        newData.realFile = fileName;
+        return this.mongoUtil.insert(this.collectionName, newData);
+      });
   }
 
-  update(identityId, data) {
+  update(identityId, data, files) {
+    const promise = files && files.file ? this.fileUtil.save(files.file) : Promise.resolve();
     const filter = {
       _id: this.mongoUtil.getObjectID(identityId),
     };
-    const newData = _.assign({}, data, {
+    const newData = _.assign({}, JSON.parse(data.data), {
       updated: new Date(),
     });
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
+    return promise.then((fileName) => {
+      if (fileName) {
+        newData.realFile = fileName;
+      }
+      this.mongoUtil.update(this.collectionName, newData, filter);
     });
   }
 
   delete(identityId) {
-    return new Promise((resolve, reject) => {
-      const filter = {
-        _id: this.mongoUtil.getObjectID(identityId),
-      };
-      const newData = _.assign({}, {
-        deleted: new Date(),
-        status: false,
-      });
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+    };
+    const newData = _.assign({}, {
+      deleted: new Date(),
+      status: false,
     });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 }

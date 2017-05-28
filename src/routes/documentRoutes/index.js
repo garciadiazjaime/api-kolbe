@@ -6,6 +6,7 @@ const router = express.Router({mergeParams: true});
 /*eslint-enable */
 const controller = new DocumentController();
 const identiyId = 'documentId';
+const parentId = 'groupId';
 
 router.get('/', (req, res) => {
   controller
@@ -43,7 +44,7 @@ router.get(`/:${identiyId}`, (req, res) => {
 
 router.post('/', (req, res) => {
   controller
-    .save(req.body)
+    .save(req.params[parentId], req.body, req.files)
     .then((data) => {
       res.json({
         status: true,
@@ -60,7 +61,7 @@ router.post('/', (req, res) => {
 
 router.put(`/:${identiyId}`, (req, res) => {
   controller
-    .update(req.params[identiyId], req.body)
+    .update(req.params[identiyId], req.body, req.files)
     .then((data) => {
       res.json({
         status: true,
