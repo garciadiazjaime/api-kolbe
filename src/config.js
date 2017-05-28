@@ -74,7 +74,7 @@ const config = convict({
     default: '',
     env: 'MINT_TOKEN',
   },
-  dataFoldar: {
+  dataFolder: {
     doc: 'Files',
     format: String,
     default: `${process.env.PWD}/data`,
