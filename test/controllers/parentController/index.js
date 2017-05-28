@@ -152,34 +152,41 @@ describe('ParentController', () => {
   describe('#delete', () => {
     const locationId = 1;
     const validResponse = {};
+    const validResponseGet = [];
 
     describe('valid case', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
+      const promiseFind = new Promise((resolve) => resolve(validResponseGet));
 
       beforeEach(() => {
         sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(MongoUtil.prototype, 'find', () => promiseFind);
       });
 
       afterEach(() => {
         MongoUtil.prototype.update.restore();
+        MongoUtil.prototype.find.restore();
       });
 
-      it('resolves a promise', () => expect(controller.delete(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.delete(locationId)).to.be.fulfilled);
     });
 
     describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
+      const promiseFind = new Promise((resolve) => resolve(validResponseGet));
 
       beforeEach(() => {
         sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(MongoUtil.prototype, 'find', () => promiseFind);
       });
 
       afterEach(() => {
         MongoUtil.prototype.update.restore();
+        MongoUtil.prototype.find.restore();
       });
 
-      it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejected);
     });
   });
 });
