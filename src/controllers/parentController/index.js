@@ -2,12 +2,16 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import GroupStudentController from '../groupStudentController';
+import ParentStudentController from '../parentStudentController';
+
 export default class ParentController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
     this.collectionName = 'parent';
-    this.parentStudentCollectionName = 'parentStudent';
+    this.groupStudentController = new GroupStudentController();
+    this.parentStudentController = new ParentStudentController();
   }
 
   list(params) {
@@ -15,13 +19,13 @@ export default class ParentController {
       status: true,
     };
     if (params.groupId) {
-      filter.groupId = params.groupId;
+      return this.groupStudentController.list(params.groupId)
+        .then(students => this.parentStudentController.getParentsFromStudents(students))
+        .then(parents => Promise.all(
+          parents.map(item => this.get(item.parentId))
+        ));
     }
-    return new Promise((resolve, reject) => {
-      this.mongoUtil.find(this.collectionName, filter, {})
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-    });
+    return this.mongoUtil.find(this.collectionName, filter, {});
   }
 
   get(identityId) {
@@ -29,12 +33,8 @@ export default class ParentController {
       _id: this.mongoUtil.getObjectID(identityId),
       status: true,
     };
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .findOne(this.collectionName, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return this.mongoUtil
+      .findOne(this.collectionName, filter);
   }
 
   save(data) {
@@ -55,28 +55,23 @@ export default class ParentController {
     const newData = _.assign({}, data, {
       updated: new Date(),
     });
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 
   delete(identityId) {
-    return new Promise((resolve, reject) => {
-      const filter = {
-        _id: this.mongoUtil.getObjectID(identityId),
-      };
-      const newData = _.assign({}, {
-        deleted: new Date(),
-        status: false,
-      });
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+    };
+    const newData = _.assign({}, {
+      deleted: new Date(),
+      status: false,
     });
+    return this.parentStudentController.get(identityId)
+      .then(students => Promise.all([
+        this.groupStudentController.deleteStudents(students),
+        this.parentStudentController.delete(identityId),
+        this.mongoUtil.update(this.collectionName, newData, filter),
+      ]));
   }
 
   upload(data) {
