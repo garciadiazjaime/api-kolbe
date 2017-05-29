@@ -94,6 +94,62 @@ export default class GroupController {
     });
   }
 
+  uploadv2(groupId, file) {
+    const { data } = file;
+    const dataFromFile = XlsxUtil.parseBufferToJson(data.data).pop();
+    if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
+      const parentByCode = this.getParentByCode(dataFromFile.data);
+      const promises = [];
+
+      _.forIn(parentByCode, (item) => {
+        const internalPromises = [];
+        internalPromises.push(this.parentController.upload(item.parent));
+        item.students.forEach((student) => {
+          internalPromises.push(this.studentController.upload(student));
+        });
+        promises.push(Promise.all(internalPromises));
+      });
+
+      return Promise.all(promises).then((results) => {
+        const internalPromises = [];
+        results.forEach((item) => {
+          let parentId = null;
+          let studentId = null;
+          item.forEach((entityId, index) => {
+            if (index === 0) {
+              parentId = entityId;
+            } else {
+              studentId = entityId;
+              internalPromises.push(this.parentStudentController.upload(parentId, studentId));
+              internalPromises.push(this.groupStudentController.upload(groupId, studentId));
+            }
+          });
+        });
+        return Promise.all(internalPromises);
+      });
+    }
+    return Promise.reject('wrong file data');
+  }
+
+  getParentByCode(data) {
+    const parentByCode = {};
+    data.forEach((item, index) => {
+      if (index === 0) {
+        this.groupUpload.setColumns(item);
+      } else {
+        const { parent, student } = this.groupUpload.getEntities(item);
+        if (!parentByCode[parent.code]) {
+          parentByCode[parent.code] = {
+            parent,
+            students: [],
+          };
+        }
+        parentByCode[parent.code].students.push(student);
+      }
+    });
+    return parentByCode;
+  }
+
   upload(identityId, file) {
     return new Promise((resolve, reject) => {
       try {
@@ -103,11 +159,10 @@ export default class GroupController {
           const promises = dataFromFile.data.map((item, index) => {
             if (index === 0) {
               this.groupUpload.setColumns(item);
-            } else {
-              const entities = this.groupUpload.getEntities(item);
-              return this.uploadHelper(identityId, entities);
+              return null;
             }
-            return null;
+            const entities = this.groupUpload.getEntities(item);
+            return this.uploadHelper(identityId, entities);
           });
           Promise.all(promises).then(() => resolve('saved'));
         } else {
@@ -123,9 +178,13 @@ export default class GroupController {
     return Promise.all([
       this.parentController.upload(entities.parent),
       this.studentController.upload(entities.student),
-    ]).then((results) => Promise.all([
-      this.parentStudentController.upload(results[0], results[1]),
-      this.groupStudentController.upload(identityId, results[1]),
-    ]));
+    ]).then((results) => {
+      const parentId = results[0];
+      const studentId = results[1];
+      return Promise.all([
+        this.parentStudentController.upload(parentId, studentId),
+        this.groupStudentController.upload(identityId, studentId),
+      ]);
+    });
   }
 }

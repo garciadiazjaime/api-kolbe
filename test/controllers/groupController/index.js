@@ -206,5 +206,26 @@ describe('GroupController', () => {
         expect(promiseResults).to.eventually.equal('saved');
       });
     });
+
+    describe('v2 valid case', () => {
+      const promise = new Promise((resolve) => resolve(validResponse));
+
+      beforeEach(() => {
+        sinon.stub(controller, 'uploadHelper', () => promise);
+      });
+
+      afterEach(() => {
+        controller.uploadHelper.restore();
+      });
+
+      it('resolves a promise', () => {
+        const promiseResults = controller.uploadv2(groupId, {
+          data: {
+            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
+          },
+        });
+        expect(promiseResults).to.eventually.equal('saved');
+      });
+    });
   });
 });

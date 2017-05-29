@@ -1,3 +1,4 @@
+/* eslint max-len: [2, 500, 4] */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
@@ -21,9 +22,10 @@ export default class ParentController {
     if (params.groupId) {
       return this.groupStudentController.list(params.groupId)
         .then(students => this.parentStudentController.getParentsFromStudents(students))
-        .then(parents => Promise.all(
-          parents.map(item => this.get(item.parentId))
-        ));
+        .then(parents => {
+          const filterParents = parents.filter((parent, index, self) => self.findIndex(item => item.parentId.toString() === parent.parentId.toString()) === index);
+          return Promise.all(filterParents.map(item => this.get(item.parentId)));
+        });
     }
     return this.mongoUtil.find(this.collectionName, filter, {});
   }
@@ -88,10 +90,15 @@ export default class ParentController {
   }
 
   upsert(entity, data) {
-    return !entity ? this.save(data) : entity;
+    if (entity) {
+      const newData = _.assign({}, entity, data);
+      newData.status = true;
+      return this.update(entity._id, newData);
+    }
+    return this.save(data);
   }
 
   extractId(data) {
-    return data._id ? data._id : data.data.insertedIds[0];
+    return data.filter ? data.filter._id : data.data.insertedIds[0];
   }
 }

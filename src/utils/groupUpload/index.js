@@ -80,7 +80,7 @@ export default class GroupUpload {
       lastname: data[this.columns.lastname.index],
       lastname2: data[this.columns.lastname2.index],
       name: data[this.columns.name.index],
-      code: data[this.columns.studentCode.index],
+      code: `${data[this.columns.studentCode.index]}`,
       dob: this.getJsDateFromExcel(data[this.columns.dob.index]),
       registrationDate: this.getDate(data[this.columns.registrationDate.index]),
     };
@@ -88,7 +88,7 @@ export default class GroupUpload {
 
   getParent(data) {
     return {
-      code: data[this.columns.familyCode.index],
+      code: `${data[this.columns.familyCode.index]}`,
       email: data[this.columns.email.index],
     };
   }

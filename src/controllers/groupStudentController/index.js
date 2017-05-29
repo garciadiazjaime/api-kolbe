@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
@@ -37,6 +38,16 @@ export default class GroupStudentController {
     return this.mongoUtil.insert(this.collectionName, newData);
   }
 
+  update(identityId, data) {
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+    };
+    const newData = _.assign({}, data, {
+      updated: new Date(),
+    });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
+  }
+
   upload(groupId, studentId) {
     const filter = {
       groupId,
@@ -47,7 +58,12 @@ export default class GroupStudentController {
   }
 
   upsert(entity, groupId, studentId) {
-    return !entity ? this.save(groupId, studentId) : entity;
+    if (entity) {
+      const newData = _.assign({}, entity);
+      newData.status = true;
+      return this.update(entity._id, newData);
+    }
+    return this.save(groupId, studentId);
   }
 
   deleteStudents(students) {
