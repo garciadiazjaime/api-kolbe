@@ -94,6 +94,62 @@ export default class GroupController {
     });
   }
 
+  uploadv2(groupId, file) {
+    const { data } = file;
+    const dataFromFile = XlsxUtil.parseBufferToJson(data.data).pop();
+    if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
+      const parentByCode = this.getParentByCode(dataFromFile.data);
+      const promises = [];
+
+      _.forIn(parentByCode, (item) => {
+        const internalPromises = [];
+        internalPromises.push(this.parentController.upload(item.parent));
+        item.students.forEach((student) => {
+          internalPromises.push(this.studentController.upload(student));
+        });
+        promises.push(Promise.all(internalPromises));
+      });
+
+      return Promise.all(promises).then((results) => {
+        const internalPromises = [];
+        results.forEach((item) => {
+          let parentId = null;
+          let studentId = null;
+          item.forEach((entityId, index) => {
+            if (index === 0) {
+              parentId = entityId;
+            } else {
+              studentId = entityId;
+              internalPromises.push(this.parentStudentController.upload(parentId, studentId));
+              internalPromises.push(this.groupStudentController.upload(groupId, studentId));
+            }
+          });
+        });
+        return Promise.all(internalPromises);
+      });
+    }
+    return Promise.reject('wrong file data');
+  }
+
+  getParentByCode(data) {
+    const parentByCode = {};
+    data.forEach((item, index) => {
+      if (index === 0) {
+        this.groupUpload.setColumns(item);
+      } else {
+        const { parent, student } = this.groupUpload.getEntities(item);
+        if (!parentByCode[parent.code]) {
+          parentByCode[parent.code] = {
+            parent,
+            students: [],
+          };
+        }
+        parentByCode[parent.code].students.push(student);
+      }
+    });
+    return parentByCode;
+  }
+
   upload(identityId, file) {
     return new Promise((resolve, reject) => {
       try {
