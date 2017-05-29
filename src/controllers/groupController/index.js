@@ -103,11 +103,10 @@ export default class GroupController {
           const promises = dataFromFile.data.map((item, index) => {
             if (index === 0) {
               this.groupUpload.setColumns(item);
-            } else {
-              const entities = this.groupUpload.getEntities(item);
-              return this.uploadHelper(identityId, entities);
+              return null;
             }
-            return null;
+            const entities = this.groupUpload.getEntities(item);
+            return this.uploadHelper(identityId, entities);
           });
           Promise.all(promises).then(() => resolve('saved'));
         } else {
@@ -123,9 +122,13 @@ export default class GroupController {
     return Promise.all([
       this.parentController.upload(entities.parent),
       this.studentController.upload(entities.student),
-    ]).then((results) => Promise.all([
-      this.parentStudentController.upload(results[0], results[1]),
-      this.groupStudentController.upload(identityId, results[1]),
-    ]));
+    ]).then((results) => {
+      const parentId = results[0];
+      const studentId = results[1];
+      return Promise.all([
+        this.parentStudentController.upload(parentId, studentId),
+        this.groupStudentController.upload(identityId, studentId),
+      ]);
+    });
   }
 }

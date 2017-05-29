@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
@@ -41,6 +42,16 @@ export default class ParentStudentController {
     return this.mongoUtil.insert(this.collectionName, newData);
   }
 
+  update(identityId, data) {
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+    };
+    const newData = _.assign({}, data, {
+      updated: new Date(),
+    });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
+  }
+
   upload(parentId, studentId) {
     const filter = {
       parentId,
@@ -51,7 +62,12 @@ export default class ParentStudentController {
   }
 
   upsert(entity, parentId, studentId) {
-    return !entity ? this.save(parentId, studentId) : entity;
+    if (entity) {
+      const newData = _.assign({}, entity);
+      newData.status = true;
+      return this.update(entity._id, newData);
+    }
+    return this.save(parentId, studentId);
   }
 
   getParentsFromStudents(data) {

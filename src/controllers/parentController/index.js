@@ -88,10 +88,15 @@ export default class ParentController {
   }
 
   upsert(entity, data) {
-    return !entity ? this.save(data) : entity;
+    if (entity) {
+      const newData = _.assign({}, entity, data);
+      newData.status = true;
+      return this.update(entity._id, newData);
+    }
+    return this.save(data);
   }
 
   extractId(data) {
-    return data._id ? data._id : data.data.insertedIds[0];
+    return data.filter ? data.filter._id : data.data.insertedIds[0];
   }
 }
