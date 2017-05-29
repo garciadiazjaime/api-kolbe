@@ -47,7 +47,7 @@ describe('DocumentController', () => {
   });
 
   describe('#get', () => {
-    const locationId = 1;
+    const documentId = 1;
 
     describe('valid case', () => {
       const validResponse = {};
@@ -61,7 +61,7 @@ describe('DocumentController', () => {
         MongoUtil.prototype.findOne.restore();
       });
 
-      it('resolves a promise', () => expect(controller.get(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.get(documentId)).to.eventually.equal(validResponse));
     });
 
     describe('invalid case', () => {
@@ -76,16 +76,25 @@ describe('DocumentController', () => {
         MongoUtil.prototype.findOne.restore();
       });
 
-      it('rejects a promise', () => expect(controller.get(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.get(documentId)).to.be.rejectedWith(invalidResponse));
     });
   });
 
   describe('#save', () => {
-    const data = {};
+    const groupId = 'groupId';
+    const data = {
+      data: JSON.stringify({}),
+    };
 
     describe('valid case', () => {
       const validResponse = {};
       const promise = new Promise((resolve) => resolve(validResponse));
+      const files = {
+        file: {
+          name: 'filename',
+          mv: sinon.stub().returns(Promise.resolve()),
+        },
+      };
 
       beforeEach(() => {
         sinon.stub(MongoUtil.prototype, 'insert', () => promise);
@@ -95,12 +104,21 @@ describe('DocumentController', () => {
         MongoUtil.prototype.insert.restore();
       });
 
-      it('resolves a promise', () => expect(controller.save(data)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => {
+        expect(controller.save(groupId, data, files)).to.eventually.equal(validResponse);
+        expect(files.file.mv.calledOnce).to.equal(true);
+      });
     });
 
     describe('invalid case', () => {
       const invalidResponse = 'error';
       const promise = new Promise((_, reject) => reject(invalidResponse));
+      const files = {
+        file: {
+          name: 'filename',
+          mv: sinon.stub().returns(Promise.resolve()),
+        },
+      };
 
       beforeEach(() => {
         sinon.stub(MongoUtil.prototype, 'insert', () => promise);
@@ -110,13 +128,18 @@ describe('DocumentController', () => {
         MongoUtil.prototype.insert.restore();
       });
 
-      it('rejects a promise', () => expect(controller.save(data)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => {
+        expect(controller.save(groupId, data, files)).to.be.rejectedWith(invalidResponse);
+        expect(files.file.mv.calledOnce).to.equal(true);
+      });
     });
   });
 
   describe('#update', () => {
-    const locationId = 1;
-    const data = {};
+    const documentId = 1;
+    const data = {
+      data: JSON.stringify({}),
+    };
 
     describe('valid case', () => {
       const validResponse = {};
@@ -130,7 +153,9 @@ describe('DocumentController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('resolves a promise', () => expect(controller.update(locationId, data)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => {
+        expect(controller.update(documentId, data)).to.eventually.equal(validResponse);
+      });
     });
 
     describe('invalid case', () => {
@@ -145,12 +170,14 @@ describe('DocumentController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('rejects a promise', () => expect(controller.update(locationId, data)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => {
+        expect(controller.update(documentId, data)).to.be.rejectedWith(invalidResponse);
+      });
     });
   });
 
   describe('#delete', () => {
-    const locationId = 1;
+    const documentId = 1;
     const validResponse = {};
 
     describe('valid case', () => {
@@ -164,7 +191,7 @@ describe('DocumentController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('resolves a promise', () => expect(controller.delete(locationId)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => expect(controller.delete(documentId)).to.eventually.equal(validResponse));
     });
 
     describe('invalid case', () => {
@@ -179,7 +206,7 @@ describe('DocumentController', () => {
         MongoUtil.prototype.update.restore();
       });
 
-      it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => expect(controller.delete(documentId)).to.be.rejectedWith(invalidResponse));
     });
   });
 });
