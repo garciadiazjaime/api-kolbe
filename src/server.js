@@ -13,10 +13,12 @@ import groupRoutes from './routes/groupRoutes';
 import studentRoutes from './routes/studentRoutes';
 import groupStudentRoutes from './routes/groupStudent';
 import parentStudentRoutes from './routes/parentStudentRoutes';
+import parentGroupRoutes from './routes/parentGroupRoutes';
 import newsletterRoutes from './routes/newsletterRoutes';
 import documentRoutes from './routes/documentRoutes';
 import activityRoutes from './routes/activityRoutes';
 import parentRoutes from './routes/parentRoutes';
+import loginRoutes from './routes/loginRoutes';
 import config from './config';
 
 const app = express();
@@ -38,6 +40,7 @@ app.use('/api/parent', parentRoutes);
 app.use('/api/student', studentRoutes);
 
 app.use('/api/parent/:parentId/student', parentStudentRoutes);
+app.use('/api/parent/:parentId/group', parentGroupRoutes);
 
 app.use('/api/group/:groupId/activity', activityRoutes);
 app.use('/api/group/:groupId/document', documentRoutes);
@@ -45,6 +48,7 @@ app.use('/api/group/:groupId/newsletter', newsletterRoutes);
 app.use('/api/group/:groupId/parent', parentRoutes);
 app.use('/api/group/:groupId/student', groupStudentRoutes);
 app.use('/api/group', groupRoutes);
+app.use('/api/login', loginRoutes);
 
 locationRoutes.use('/:locationId/level', levelRoutes);
 levelRoutes.use('/:levelId/grade', gradeRoutes);
