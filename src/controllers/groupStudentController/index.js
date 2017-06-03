@@ -1,3 +1,4 @@
+/* eslint max-len: [2, 500, 4] */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
@@ -81,5 +82,19 @@ export default class GroupStudentController {
       ]);
     });
     return Promise.all(promises);
+  }
+
+  getGroupsFromStudent(data) {
+    if (!_.isArray(data) || !data.length) {
+      return null;
+    }
+    const promises = data.map((item) => {
+      const filter = {
+        status: true,
+        studentId: item.studentId,
+      };
+      return this.mongoUtil.findOne(this.collectionName, filter);
+    });
+    return Promise.all(promises).then(groupStudent => groupStudent.filter((student, index, self) => self.findIndex(item => item.groupId.toString() === student.groupId.toString()) === index));
   }
 }
