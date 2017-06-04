@@ -28,6 +28,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('static'));
+app.use('/docs', express.static('data'));
 app.use(fileUpload());
 
 app.use('/api/school', schoolRoutes);

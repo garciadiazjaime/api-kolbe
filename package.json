@@ -7,7 +7,7 @@
     "dev": "npm run webpack && nodemon build/server.js",
     "lint": "./node_modules/.bin/eslint .",
     "test": "npm run lint && npm run unittest",
-    "start": "node --use_strict start.js",
+    "start": "node start.js",
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive test",
     "webpack": "webpack --progress --colors",
     "reset-db": "node src/scripts/resetDataBase",
