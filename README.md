@@ -48,3 +48,5 @@ db.parent.find().pretty()
 db.student.find().pretty()
 db.parentStudent.find().pretty()
 db.groupStudent.find().pretty()
+
+db.user.insert({email: 'santafe-preescolar-1roa@irk.mx', password: '1roa', role: 2, groupId: '58fbde6f393b1b1bd8536ad2' })
