@@ -3,8 +3,9 @@ import bodyParser from 'body-parser';
 import MongoUtil from 'util-mongodb';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
+import morgan from 'morgan';
 
-
+import apiRoutes from './routes/apiRoutes';
 import schoolRoutes from './routes/schoolRoutes';
 import locationRoutes from './routes/locationRoutes';
 import levelRoutes from './routes/levelRoutes';
@@ -24,6 +25,8 @@ import config from './config';
 const app = express();
 const mongoUtil = new MongoUtil(config.get('db.url'));
 
+app.set('secureToken', config.get('secureToken'));
+app.use(morgan('dev'));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -31,25 +34,29 @@ app.use(express.static('static'));
 app.use('/docs', express.static('data'));
 app.use(fileUpload());
 
-app.use('/api/school', schoolRoutes);
-app.use('/api/location', locationRoutes);
-
-app.use('/api/newsletter', newsletterRoutes);
-app.use('/api/document', documentRoutes);
-app.use('/api/activity', activityRoutes);
-app.use('/api/parent', parentRoutes);
-app.use('/api/student', studentRoutes);
-
-app.use('/api/parent/:parentId/student', parentStudentRoutes);
-app.use('/api/parent/:parentId/group', parentGroupRoutes);
-
-app.use('/api/group/:groupId/activity', activityRoutes);
-app.use('/api/group/:groupId/document', documentRoutes);
-app.use('/api/group/:groupId/newsletter', newsletterRoutes);
-app.use('/api/group/:groupId/parent', parentRoutes);
-app.use('/api/group/:groupId/student', groupStudentRoutes);
-app.use('/api/group', groupRoutes);
 app.use('/api/login', loginRoutes);
+
+app.use('/api', apiRoutes);
+
+apiRoutes.use('/school', schoolRoutes);
+apiRoutes.use('/location', locationRoutes);
+
+apiRoutes.use('/newsletter', newsletterRoutes);
+apiRoutes.use('/document', documentRoutes);
+apiRoutes.use('/activity', activityRoutes);
+apiRoutes.use('/parent', parentRoutes);
+apiRoutes.use('/student', studentRoutes);
+
+apiRoutes.use('/parent/:parentId/student', parentStudentRoutes);
+apiRoutes.use('/parent/:parentId/group', parentGroupRoutes);
+
+apiRoutes.use('/group/:groupId/activity', activityRoutes);
+apiRoutes.use('/group/:groupId/document', documentRoutes);
+apiRoutes.use('/group/:groupId/newsletter', newsletterRoutes);
+apiRoutes.use('/group/:groupId/parent', parentRoutes);
+apiRoutes.use('/group/:groupId/student', groupStudentRoutes);
+apiRoutes.use('/group', groupRoutes);
+
 
 locationRoutes.use('/:locationId/level', levelRoutes);
 levelRoutes.use('/:levelId/grade', gradeRoutes);

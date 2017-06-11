@@ -1,6 +1,8 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 import LoginController from '../../controllers/loginController';
+import config from '../../config';
 
 /*eslint-disable */
 const router = express.Router({mergeParams: true});
@@ -8,10 +10,21 @@ const router = express.Router({mergeParams: true});
 const controller = new LoginController();
 
 router.post('/', (req, res) => {
-  controller.loginParent(req.body)
+  controller.login(req.body)
     .then((data) => {
       if (data) {
-        res.json({ status: true, data });
+        // expires in 24 hours
+        const token = jwt.sign(data, config.get('secureToken'), {
+          expiresIn: 86400,
+        });
+        res.json({
+          status: true,
+          data: {
+            token,
+            role: data.role,
+            id: data.id,
+          },
+        });
       } else {
         res.json({ status: false });
       }

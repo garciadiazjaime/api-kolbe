@@ -71,7 +71,7 @@ const config = convict({
   secureToken: {
     doc: 'Our token',
     format: String,
-    default: '',
+    default: 'MINT_TOKEN',
     env: 'MINT_TOKEN',
   },
   dataFolder: {
