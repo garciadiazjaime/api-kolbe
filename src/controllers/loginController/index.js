@@ -29,7 +29,7 @@ export default class LoginController {
               if (results2) {
                 return resolve(_.assign({}, {
                   role: results2.role,
-                  id: results2.groupId,
+                  id: results2.entityId,
                 }));
               }
               return reject('invalid user');

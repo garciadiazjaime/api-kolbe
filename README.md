@@ -49,4 +49,6 @@ db.student.find().pretty()
 db.parentStudent.find().pretty()
 db.groupStudent.find().pretty()
 
-db.user.insert({email: 'santafe-preescolar-1roa@irk.mx', password: '1roa', role: 2, groupId: '58fbde6f393b1b1bd8536ad2' })
+db.user.insert({email: 'santafe-preescolar-1roa@irk.mx', password: '1roa', role: 2, entityId: '58fbde6f393b1b1bd8536ad2' })
+db.user.insert({email: 'santafe-preescolar@irk.mx', password: 'preescolar', role: 1, entityId: '58fbde6f393b1b1bd8536ad0' })
+db.user.insert({email: 'santafe@irk.mx', password: 'santafe', role: 0, entityId: '58fbde6f393b1b1bd8536acf' })
