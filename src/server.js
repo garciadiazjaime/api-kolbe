@@ -5,6 +5,7 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 
+import sessionRoutes from './routes/sessionRoutes';
 import apiRoutes from './routes/apiRoutes';
 import schoolRoutes from './routes/schoolRoutes';
 import locationRoutes from './routes/locationRoutes';
@@ -38,6 +39,7 @@ app.use('/api/login', loginRoutes);
 
 app.use('/api', apiRoutes);
 
+apiRoutes.use('/session', sessionRoutes);
 apiRoutes.use('/school', schoolRoutes);
 apiRoutes.use('/location', locationRoutes);
 
