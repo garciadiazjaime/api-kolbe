@@ -9,6 +9,17 @@ export default class UserController {
     this.collectionName = 'user';
   }
 
+  get(identityId) {
+    if (!identityId) {
+      return null;
+    }
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+      status: true,
+    };
+    return this.mongoUtil.findOne(this.collectionName, filter);
+  }
+
   save(data) {
     if (!data) {
       return null;
@@ -56,6 +67,17 @@ export default class UserController {
 
   extractId(data) {
     return data.filter ? data.filter._id : data.data.insertedIds[0];
+  }
+
+  delete(identityId) {
+    const filter = {
+      _id: this.mongoUtil.getObjectID(identityId),
+    };
+    const newData = _.assign({}, {
+      deleted: new Date(),
+      status: false,
+    });
+    return this.mongoUtil.update(this.collectionName, newData, filter);
   }
 
   static getRole(entity) {

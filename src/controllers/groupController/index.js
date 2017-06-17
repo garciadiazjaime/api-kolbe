@@ -103,7 +103,7 @@ export default class GroupController {
         }
       });
 
-      return Promise.all(promises);
+      return Promise.all(promises).then(() => Promise.resolve('saved'));
     }
     return Promise.reject('wrong file data');
   }

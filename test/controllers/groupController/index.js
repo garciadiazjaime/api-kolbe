@@ -184,46 +184,23 @@ describe('GroupController', () => {
 
   describe('#upload', () => {
     const groupId = 1;
-    const validResponse = {};
 
     describe('valid case', () => {
-      const promise = new Promise((resolve) => resolve(validResponse));
-
       beforeEach(() => {
-        sinon.stub(controller, 'uploadHelper', () => promise);
+        sinon.stub(controller.userController, 'upload', () => Promise.resolve());
+        sinon.stub(controller.groupParentController, 'upload', () => Promise.resolve());
       });
 
       afterEach(() => {
-        controller.uploadHelper.restore();
+        controller.userController.upload.restore();
+        controller.groupParentController.upload.restore();
       });
 
       it('resolves a promise', () => {
         const promiseResults = controller.upload(groupId, {
-          data: {
-            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
-          },
+          data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
         });
-        expect(promiseResults).to.eventually.equal('saved');
-      });
-    });
 
-    describe('v2 valid case', () => {
-      const promise = new Promise((resolve) => resolve(validResponse));
-
-      beforeEach(() => {
-        sinon.stub(controller, 'uploadHelper', () => promise);
-      });
-
-      afterEach(() => {
-        controller.uploadHelper.restore();
-      });
-
-      it('resolves a promise', () => {
-        const promiseResults = controller.uploadv2(groupId, {
-          data: {
-            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
-          },
-        });
         expect(promiseResults).to.eventually.equal('saved');
       });
     });
