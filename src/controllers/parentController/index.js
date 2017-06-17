@@ -91,8 +91,10 @@ export default class ParentController {
 
   upsert(entity, data) {
     if (entity) {
-      const newData = _.assign({}, entity, data);
-      newData.status = true;
+      const newData = _.assign({}, entity, data, {
+        status: true,
+        deleted: null,
+      });
       return this.update(entity._id, newData);
     }
     return this.save(data);
