@@ -95,7 +95,7 @@ router.delete(`/:${identiyId}`, (req, res) => {
 
 router.post(`/:${identiyId}/upload`, (req, res) => {
   controller
-    .uploadv2(req.params[identiyId], req.files)
+    .upload(req.params[identiyId], req.files.data)
     .then(data => {
       res.json({
         status: true,

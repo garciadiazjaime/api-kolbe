@@ -1,7 +1,8 @@
 /* eslint max-len: [2, 500, 4] */
 import _ from 'lodash';
+import UserController from '../../controllers/userController';
 
-export default class GroupUpload {
+export default class GroupUploadUtil {
 
   constructor() {
     this.columns = {
@@ -62,7 +63,7 @@ export default class GroupUpload {
     return {
       group: this.getGroup(row),
       student: this.getStudent(row),
-      parent: this.getParent(row),
+      user: this.getUser(row),
     };
   }
 
@@ -86,10 +87,12 @@ export default class GroupUpload {
     };
   }
 
-  getParent(data) {
+  getUser(data) {
     return {
+      password: `${data[this.columns.familyCode.index]}`,
       code: `${data[this.columns.familyCode.index]}`,
-      email: data[this.columns.email.index],
+      username: data[this.columns.email.index],
+      role: UserController.getRole('parent'),
     };
   }
 

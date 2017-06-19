@@ -3,22 +3,18 @@ import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
 import XlsxUtil from '../../utils/xlsxUtil';
-import GroupUpload from '../../utils/groupUpload';
-import StudentController from '../studentController';
-import ParentController from '../parentController';
-import ParentStudentController from '../parentStudentController';
-import GroupStudentController from '../groupStudentController';
+import GroupUploadUtil from '../../utils/groupUploadUtil';
+import UserController from '../userController';
+import GroupParentController from '../groupParentController';
 
 export default class GroupController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
     this.collectionName = 'group';
-    this.groupUpload = new GroupUpload();
-    this.studentController = new StudentController();
-    this.parentController = new ParentController();
-    this.parentStudentController = new ParentStudentController();
-    this.groupStudentController = new GroupStudentController();
+    this.groupUploadUtil = new GroupUploadUtil();
+    this.userController = new UserController();
+    this.groupParentController = new GroupParentController();
   }
 
   list(parentId) {
@@ -94,97 +90,38 @@ export default class GroupController {
     });
   }
 
-  uploadv2(groupId, file) {
-    const { data } = file;
-    const dataFromFile = XlsxUtil.parseBufferToJson(data.data).pop();
+  upload(groupId, file) {
+    const dataFromFile = XlsxUtil.parseBufferToJson(file.data).pop();
     if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
-      const parentByCode = this.getParentByCode(dataFromFile.data);
+      const userByCode = this.dedupUsers(dataFromFile.data);
       const promises = [];
 
-      _.forIn(parentByCode, (item) => {
-        const internalPromises = [];
-        internalPromises.push(this.parentController.upload(item.parent));
-        item.students.forEach((student) => {
-          internalPromises.push(this.studentController.upload(student));
-        });
-        promises.push(Promise.all(internalPromises));
+      _.forIn(userByCode, (item) => {
+        if (item.user && item.user.username && item.user.password) {
+          this.userController.upload(item.user)
+            .then((userId) => promises.push(this.groupParentController.upload(groupId, userId)));
+        }
       });
 
-      return Promise.all(promises).then((results) => {
-        const internalPromises = [];
-        results.forEach((item) => {
-          let parentId = null;
-          let studentId = null;
-          item.forEach((entityId, index) => {
-            if (index === 0) {
-              parentId = entityId;
-            } else {
-              studentId = entityId;
-              internalPromises.push(this.parentStudentController.upload(parentId, studentId));
-              internalPromises.push(this.groupStudentController.upload(groupId, studentId));
-            }
-          });
-        });
-        return Promise.all(internalPromises);
-      });
+      return Promise.all(promises).then(() => Promise.resolve('saved'));
     }
     return Promise.reject('wrong file data');
   }
 
-  getParentByCode(data) {
-    const parentByCode = {};
+  dedupUsers(data) {
+    const userByCode = {};
     data.forEach((item, index) => {
       if (index === 0) {
-        this.groupUpload.setColumns(item);
+        this.groupUploadUtil.setColumns(item);
       } else {
-        const { parent, student } = this.groupUpload.getEntities(item);
-        if (!parentByCode[parent.code]) {
-          parentByCode[parent.code] = {
-            parent,
-            students: [],
+        const { user } = this.groupUploadUtil.getEntities(item);
+        if (!userByCode[user.password]) {
+          userByCode[user.password] = {
+            user,
           };
         }
-        parentByCode[parent.code].students.push(student);
       }
     });
-    return parentByCode;
-  }
-
-  upload(identityId, file) {
-    return new Promise((resolve, reject) => {
-      try {
-        const { data } = file;
-        const dataFromFile = XlsxUtil.parseBufferToJson(data.data).pop();
-        if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
-          const promises = dataFromFile.data.map((item, index) => {
-            if (index === 0) {
-              this.groupUpload.setColumns(item);
-              return null;
-            }
-            const entities = this.groupUpload.getEntities(item);
-            return this.uploadHelper(identityId, entities);
-          });
-          Promise.all(promises).then(() => resolve('saved'));
-        } else {
-          reject('wrong file');
-        }
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  uploadHelper(identityId, entities) {
-    return Promise.all([
-      this.parentController.upload(entities.parent),
-      this.studentController.upload(entities.student),
-    ]).then((results) => {
-      const parentId = results[0];
-      const studentId = results[1];
-      return Promise.all([
-        this.parentStudentController.upload(parentId, studentId),
-        this.groupStudentController.upload(identityId, studentId),
-      ]);
-    });
+    return userByCode;
   }
 }

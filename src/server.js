@@ -20,6 +20,7 @@ import newsletterRoutes from './routes/newsletterRoutes';
 import documentRoutes from './routes/documentRoutes';
 import activityRoutes from './routes/activityRoutes';
 import parentRoutes from './routes/parentRoutes';
+import groupParentRoutes from './routes/groupParentRoutes';
 import loginRoutes from './routes/loginRoutes';
 import config from './config';
 
@@ -55,7 +56,7 @@ apiRoutes.use('/parent/:parentId/group', parentGroupRoutes);
 apiRoutes.use('/group/:groupId/activity', activityRoutes);
 apiRoutes.use('/group/:groupId/document', documentRoutes);
 apiRoutes.use('/group/:groupId/newsletter', newsletterRoutes);
-apiRoutes.use('/group/:groupId/parent', parentRoutes);
+apiRoutes.use('/group/:groupId/parent', groupParentRoutes);
 apiRoutes.use('/group/:groupId/student', groupStudentRoutes);
 apiRoutes.use('/group', groupRoutes);
 
