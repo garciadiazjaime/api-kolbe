@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -22,7 +23,7 @@ router.post('/', (req, res) => {
           data: {
             token,
             role: data.role,
-            id: data.id,
+            id: data._id,
           },
         });
       } else {

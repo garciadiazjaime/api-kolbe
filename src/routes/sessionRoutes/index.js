@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import express from 'express';
 
 /*eslint-disable */
@@ -8,7 +9,7 @@ router.get('/', (req, res) => {
   res.json({
     status: true,
     role: req.decoded.role,
-    id: req.decoded.id,
+    id: req.decoded._id,
   });
 });
 
