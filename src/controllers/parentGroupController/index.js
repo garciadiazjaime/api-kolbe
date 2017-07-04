@@ -1,19 +1,17 @@
 import MongoUtil from 'util-mongodb';
 
-import GroupStudentController from '../groupStudentController';
-import ParentStudentController from '../parentStudentController';
-
 export default class ParentController {
 
   constructor() {
     this.mongoUtil = new MongoUtil();
-    this.collectionName = 'parent';
-    this.groupStudentController = new GroupStudentController();
-    this.parentStudentController = new ParentStudentController();
+    this.collectionName = 'groupParent';
   }
 
   list(parentId) {
-    return this.parentStudentController.get(parentId)
-      .then(results => this.groupStudentController.getGroupsFromStudent(results));
+    const filter = {
+      status: true,
+      parentId: this.mongoUtil.getObjectID(parentId),
+    };
+    return this.mongoUtil.find(this.collectionName, filter, {});
   }
 }
