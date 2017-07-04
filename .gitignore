@@ -6,3 +6,4 @@ npm-debug.log
 newrelic_agent.log
 data
 build
+secrets.txt
