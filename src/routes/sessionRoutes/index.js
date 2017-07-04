@@ -6,11 +6,14 @@ const router = express.Router();
 /*eslint-enable */
 
 router.get('/', (req, res) => {
-  res.json({
+  const { decoded } = req;
+  const id = decoded.role === 3 ? decoded._id : decoded.entityId;
+  const response = {
     status: true,
-    role: req.decoded.role,
-    id: req.decoded._id,
-  });
+    role: decoded.role,
+    id,
+  };
+  res.json(response);
 });
 
 export default router;

@@ -18,12 +18,13 @@ router.post('/', (req, res) => {
         const token = jwt.sign(data, config.get('secureToken'), {
           expiresIn: 86400,
         });
+        const id = data.role === 3 ? data._id : data.entityId;
         res.json({
           status: true,
           data: {
             token,
             role: data.role,
-            id: data._id,
+            id,
           },
         });
       } else {
