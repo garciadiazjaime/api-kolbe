@@ -11,7 +11,8 @@
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive test",
     "webpack": "webpack --progress --colors",
     "reset-db": "node src/scripts/resetDataBase",
-    "reset-db2": "node src/scripts/resetDataBase/index2"
+    "reset-db2": "node src/scripts/resetDataBase/index2",
+    "create-group-users": "node src/scripts/createGroupUsers/index.js"
   },
   "keywords": [],
   "author": "",
