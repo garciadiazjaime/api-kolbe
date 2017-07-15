@@ -3998,6 +3998,7 @@ module.exports =
 	      var token = _jsonwebtoken2.default.sign(data, _config2.default.get('secureToken'), {
 	        expiresIn: 86400
 	      });
+	      // ['', 'level', 'group', 'parent', 'location', 'school']
 	      var id = data.role === 3 ? data._id : data.entityId;
 	      res.json({
 	        status: true,
