@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 import SchoolModel from '../../models/schoolModel';
 import schoolData from './data/school';
+import config from '../../config';
 
 mongoose.Promise = global.Promise;
-const config = require('../../config');
 
 const promise = mongoose.connect(config.get('db.url'), {
   useMongoClient: true,
