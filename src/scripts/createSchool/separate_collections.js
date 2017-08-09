@@ -1,4 +1,5 @@
 /* eslint max-len: [2, 500, 4] */
+/* eslint import/no-unresolved: [2, { ignore: ['\.data\.js$'] }] */
 
 const MongoUtil = require('util-mongodb').default;
 const _ = require('lodash');

@@ -1,3 +1,4 @@
+/* eslint import/no-unresolved: [2, { ignore: ['\.data\.js$'] }] */
 import mongoose from 'mongoose';
 
 import SchoolModel from '../../models/schoolModel';
