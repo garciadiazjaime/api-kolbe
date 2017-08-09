@@ -12,7 +12,7 @@
     "start": "node start.js",
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive test",
     "webpack": "webpack --progress --colors",
-    "import-school": "node build/scripts/importSchool",
+    "import-school": "node build/scripts/createSchool",
     "import-group-users": "node src/scripts/createGroupUsers/index.js",
     "import-admin-users": "node build/scripts/createAdminUsers"
   },

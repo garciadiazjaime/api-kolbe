@@ -15,7 +15,7 @@ const dbConnectionPromise = mongoose.connect(config.get('db.url'), {
 class CreateAdminUsers {
 
   static main() {
-    dbConnectionPromise.then(db => UserModel.collection.drop(CreateAdminUsers.loadAdminUsers));
+    dbConnectionPromise.then(() => UserModel.collection.drop(CreateAdminUsers.loadAdminUsers));
   }
 
   static loadAdminUsers() {
@@ -33,39 +33,39 @@ class CreateAdminUsers {
       console.log(error);
       process.exit(0);
     });
-  };
+  }
 
   static getUsers(schoolId, location) {
     const adminUsers = CreateAdminUsers.getAdminUsers(schoolId);
-    const usersPerLocation = location.map((locationLine) => CreateAdminUsers.getUsersPerLocation(locationLine));
+    const usersPerLocation = location.map(item => CreateAdminUsers.getUsersPerLocation(item));
 
     let users = [].concat(adminUsers);
     usersPerLocation.forEach((item) => {
       users = users.concat(item);
     });
     return users;
-  };
+  }
 
   static getAdminUsers(schoolId) {
     const adminUsers = userData.filter((userRow) => userRow.role === 5);
     return adminUsers.map(item => CreateAdminUsers.getNewUser(item, schoolId));
-  };
+  }
 
   static getUsersPerLocation(location) {
     const usersFromLocation = userData.filter((userRow) => location.code === userRow.location);
     return usersFromLocation.map((item) => CreateAdminUsers.getNewUser(item, location.id));
-  };
+  }
 
   static getNewUser(data, entityId) {
     return _.assign({}, data, {
       entityId,
     });
-  };
+  }
 
   static createUser(newUser) {
     const userModel = new UserModel(newUser);
-    return userModel.save()
-  };
+    return userModel.save();
+  }
 }
 
 CreateAdminUsers.main();
