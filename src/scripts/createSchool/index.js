@@ -2,8 +2,9 @@
 import mongoose from 'mongoose';
 
 import SchoolModel from '../../models/schoolModel';
-import schoolData from './data/school';
 import config from '../../config';
+
+const schoolData = require('./data/school');
 
 mongoose.Promise = global.Promise;
 const dbConnectionPromise = mongoose.connect(config.get('db.url'), {
