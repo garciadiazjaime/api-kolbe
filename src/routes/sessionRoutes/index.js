@@ -7,11 +7,13 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   const { decoded } = req;
-  const id = decoded.role === 3 ? decoded._id : decoded.entityId;
+  const { _doc } = decoded;
+  const entityId = _doc.role === 3 ? _doc._id : _doc.entityId;
   const response = {
     status: true,
-    role: decoded.role,
-    id,
+    role: _doc.role,
+    schoolId: _doc.schoolId,
+    entityId,
   };
   res.json(response);
 });

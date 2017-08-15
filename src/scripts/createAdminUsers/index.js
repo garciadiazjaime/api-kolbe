@@ -1,3 +1,4 @@
+/* eslint max-len: [2, 500, 4] */
 import mongoose from 'mongoose';
 import _ from 'lodash';
 
@@ -37,7 +38,7 @@ class CreateAdminUsers {
 
   static getUsers(schoolId, location) {
     const adminUsers = CreateAdminUsers.getAdminUsers(schoolId);
-    const usersPerLocation = location.map(item => CreateAdminUsers.getUsersPerLocation(item));
+    const usersPerLocation = location.map(item => CreateAdminUsers.getUsersPerLocation(item, schoolId));
 
     let users = [].concat(adminUsers);
     usersPerLocation.forEach((item) => {
@@ -48,17 +49,18 @@ class CreateAdminUsers {
 
   static getAdminUsers(schoolId) {
     const adminUsers = userData.filter((userRow) => userRow.role === 5);
-    return adminUsers.map(item => CreateAdminUsers.getNewUser(item, schoolId));
+    return adminUsers.map(item => CreateAdminUsers.getNewUser(item, schoolId, schoolId));
   }
 
-  static getUsersPerLocation(location) {
+  static getUsersPerLocation(location, schoolId) {
     const usersFromLocation = userData.filter((userRow) => location.code === userRow.location);
-    return usersFromLocation.map((item) => CreateAdminUsers.getNewUser(item, location.id));
+    return usersFromLocation.map((item) => CreateAdminUsers.getNewUser(item, location.id, schoolId));
   }
 
-  static getNewUser(data, entityId) {
+  static getNewUser(data, entityId, schoolId) {
     return _.assign({}, data, {
       entityId,
+      schoolId,
     });
   }
 
