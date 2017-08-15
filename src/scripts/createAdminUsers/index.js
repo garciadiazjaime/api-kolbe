@@ -1,3 +1,4 @@
+/* eslint max-len: [2, 500, 4] */
 import mongoose from 'mongoose';
 import _ from 'lodash';
 
