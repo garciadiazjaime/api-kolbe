@@ -5,79 +5,10 @@ import SchoolController from '../../controllers/schoolController';
 const router = express.Router();
 /*eslint-enable */
 const controller = new SchoolController();
-const identiyId = 'schoolId';
 
-router.get('/', (req, res) => {
-  controller
-    .list()
-    .then(data => {
-      res.json({
-        status: true,
-        data,
-      });
-    })
-    .catch(error => {
-      res.json({
-        status: false,
-        error,
-      });
-    });
-});
-
-router.get(`/:${identiyId}`, (req, res) => {
+router.get(`/:schoolId`, (req, res) => {
   controller
     .get(req.params.schoolId)
-    .then(data => {
-      res.json({
-        status: true,
-        data,
-      });
-    })
-    .catch(error => {
-      res.json({
-        status: false,
-        error,
-      });
-    });
-});
-
-router.post('/', (req, res) => {
-  controller
-    .save(req.body)
-    .then(data => {
-      res.json({
-        status: true,
-        data,
-      });
-    })
-    .catch(error => {
-      res.json({
-        status: false,
-        error,
-      });
-    });
-});
-
-router.put(`/:${identiyId}`, (req, res) => {
-  controller
-    .update(req.params.locationId, req.body)
-    .then(data => {
-      res.json({
-        status: true,
-        data,
-      });
-    })
-    .catch(error => {
-      res.json({
-        status: false,
-        error,
-      });
-    });
-});
-
-router.delete(`/:${identiyId}`, (req, res) => {
-  controller
-    .delete(req.params.locationId, req.body)
     .then(data => {
       res.json({
         status: true,

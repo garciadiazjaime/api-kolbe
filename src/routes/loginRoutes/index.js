@@ -12,18 +12,19 @@ const controller = new LoginController();
 
 router.post('/', (req, res) => {
   controller.login(req.body)
-    .then((data) => {
-      if (data) {
+    .then((user) => {
+      if (user) {
         // expires in 24 hours
-        const token = jwt.sign(data, config.get('secureToken'), {
+        const token = jwt.sign(user, config.get('secureToken'), {
           expiresIn: 86400,
         });
-        const id = data.role === 3 ? data._id : data.entityId;
+        const id = user.role === 3 ? user._id : user.entityId;
         res.json({
           status: true,
           data: {
             token,
-            role: data.role,
+            role: user.role,
+            schoolId: user.schoolId,
             id,
           },
         });

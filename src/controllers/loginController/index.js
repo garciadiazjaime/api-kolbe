@@ -1,11 +1,6 @@
-import MongoUtil from 'util-mongodb';
+import UserModel from '../../models/userModel';
 
 export default class LoginController {
-
-  constructor() {
-    this.mongoUtil = new MongoUtil();
-    this.collectionName = 'user';
-  }
 
   login(data) {
     const filter = {
@@ -13,7 +8,7 @@ export default class LoginController {
       password: data.password,
       status: true,
     };
-    return this.mongoUtil.findOne(this.collectionName, filter);
+    return UserModel.findOne(filter);
   }
 
 }

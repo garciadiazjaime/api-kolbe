@@ -8,6 +8,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   role: { type: Number, required: true },
   entityId: { type: ObjectId, required: true },
+  schoolId: { type: ObjectId, required: true },
   status: { type: Boolean, default: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
