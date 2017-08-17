@@ -1,81 +1,39 @@
-import MongoUtil from 'util-mongodb';
-import _ from 'lodash';
+import ActivityModel from '../../models/activityModel';
 
 export default class ActivityController {
-
-  constructor() {
-    this.mongoUtil = new MongoUtil();
-    this.collectionName = 'activity';
-  }
 
   list(params) {
     const filter = {
       status: true,
+      groupId: params.groupId,
     };
-    if (params.groupId) {
-      filter.groupId = params.groupId;
-    }
-    return new Promise((resolve, reject) => {
-      this.mongoUtil.find(this.collectionName, filter, {})
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-    });
+    return ActivityModel.find(filter);
   }
 
-  get(identityId) {
+  get(activityId) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
+      _id: activityId,
       status: true,
     };
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .findOne(this.collectionName, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return ActivityModel.findOne(filter);
   }
 
   save(data) {
-    const newData = _.assign({}, data, {
-      status: true,
-      created: new Date(),
-    });
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .insert(this.collectionName, newData)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    const activityModel = new ActivityModel(data);
+    return activityModel.save();
   }
 
-  update(identityId, data) {
+  update(activityId, data) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
+      _id: activityId,
     };
-    const newData = _.assign({}, data, {
-      updated: new Date(),
-    });
-    return new Promise((resolve, reject) => {
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+    return ActivityModel.update(filter, data);
   }
 
-  delete(identityId) {
-    return new Promise((resolve, reject) => {
-      const filter = {
-        _id: this.mongoUtil.getObjectID(identityId),
-      };
-      const newData = _.assign({}, {
-        deleted: new Date(),
-        status: false,
-      });
-      this.mongoUtil
-        .update(this.collectionName, newData, filter)
-        .then(results => resolve(results))
-        .catch(err => reject(err));
-    });
+  delete(activityId) {
+    const filter = {
+      _id: activityId,
+    };
+    return ActivityModel.remove(filter);
   }
 }

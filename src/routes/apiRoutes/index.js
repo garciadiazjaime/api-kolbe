@@ -53,12 +53,6 @@ router.use('/session', sessionRoutes);
 router.use('/school', schoolRoutes);
 router.use('/location', locationRoutes);
 
-router.use('/newsletter', newsletterRoutes);
-router.use('/document', documentRoutes);
-router.use('/activity', activityRoutes);
-router.use('/parent', parentRoutes);
-router.use('/student', studentRoutes);
-
 router.use('/parent/:parentId/student', parentStudentRoutes);
 router.use('/parent/:parentId/group', parentGroupRoutes);
 

@@ -1,7 +1,7 @@
 /* eslint max-len: [2, 500, 4] */
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import MongoUtil from 'util-mongodb';
+import ActivityModel from '../../../src/models/activityModel';
 import sinon from 'sinon';
 
 import ActivityController from '../../../src/controllers/activityController';
@@ -20,11 +20,11 @@ describe('ActivityController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'find', () => promise);
+        sinon.stub(ActivityModel, 'find', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.find.restore();
+        ActivityModel.find.restore();
       });
 
       it('resolves a promise', () => expect(controller.list(params)).to.eventually.equal(validResponse));
@@ -35,11 +35,11 @@ describe('ActivityController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'find', () => promise);
+        sinon.stub(ActivityModel, 'find', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.find.restore();
+        ActivityModel.find.restore();
       });
 
       it('rejects a promise', () => expect(controller.list(params)).to.be.rejectedWith(invalidResponse));
@@ -54,11 +54,11 @@ describe('ActivityController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'findOne', () => promise);
+        sinon.stub(ActivityModel, 'findOne', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.findOne.restore();
+        ActivityModel.findOne.restore();
       });
 
       it('resolves a promise', () => expect(controller.get(locationId)).to.eventually.equal(validResponse));
@@ -69,11 +69,11 @@ describe('ActivityController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'findOne', () => promise);
+        sinon.stub(ActivityModel, 'findOne', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.findOne.restore();
+        ActivityModel.findOne.restore();
       });
 
       it('rejects a promise', () => expect(controller.get(locationId)).to.be.rejectedWith(invalidResponse));
@@ -88,11 +88,11 @@ describe('ActivityController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'insert', () => promise);
+        sinon.stub(ActivityModel.prototype, 'save', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.insert.restore();
+        ActivityModel.prototype.save.restore();
       });
 
       it('resolves a promise', () => expect(controller.save(data)).to.eventually.equal(validResponse));
@@ -103,11 +103,11 @@ describe('ActivityController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'insert', () => promise);
+        sinon.stub(ActivityModel.prototype, 'save', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.insert.restore();
+        ActivityModel.prototype.save.restore();
       });
 
       it('rejects a promise', () => expect(controller.save(data)).to.be.rejectedWith(invalidResponse));
@@ -123,11 +123,11 @@ describe('ActivityController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(ActivityModel, 'update', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        ActivityModel.update.restore();
       });
 
       it('resolves a promise', () => expect(controller.update(locationId, data)).to.eventually.equal(validResponse));
@@ -138,11 +138,11 @@ describe('ActivityController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(ActivityModel, 'update', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        ActivityModel.update.restore();
       });
 
       it('rejects a promise', () => expect(controller.update(locationId, data)).to.be.rejectedWith(invalidResponse));
@@ -157,11 +157,11 @@ describe('ActivityController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(ActivityModel, 'remove', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        ActivityModel.remove.restore();
       });
 
       it('resolves a promise', () => expect(controller.delete(locationId)).to.eventually.equal(validResponse));
@@ -172,11 +172,11 @@ describe('ActivityController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(ActivityModel, 'remove', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        ActivityModel.remove.restore();
       });
 
       it('rejects a promise', () => expect(controller.delete(locationId)).to.be.rejectedWith(invalidResponse));
