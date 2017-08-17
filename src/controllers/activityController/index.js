@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import ActivityModel from '../../models/activityModel';
 
 export default class ActivityController {

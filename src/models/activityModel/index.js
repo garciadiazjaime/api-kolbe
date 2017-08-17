@@ -5,7 +5,7 @@ const ObjectId = Schema.ObjectId;
 
 const activitySchema = new Schema({
   name: { type: String, required: true },
-  description: { type: String, required: true }
+  description: { type: String, required: true },
   date: { type: Date, required: true },
   groupId: { type: ObjectId, required: true },
   status: { type: Boolean, default: true },
