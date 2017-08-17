@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const schoolSchema = new Schema({
   name: String,
-  status: { type: Boolean, default: true },
   location: Array,
+  status: { type: Boolean, default: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
 });
