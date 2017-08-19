@@ -3,8 +3,10 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const activitySchema = new Schema({
+const documentSchema = new Schema({
   name: { type: String, required: true },
+  file: { type: String, required: true },
+  realFile: { type: String, required: true },
   description: { type: String, required: true },
   date: { type: Date, required: true },
   groupId: { type: ObjectId, required: true },
@@ -13,6 +15,6 @@ const activitySchema = new Schema({
   updated: { type: Date, default: Date.now },
 });
 
-const ActivityModel = mongoose.model('Activity', activitySchema);
+const DocumentModel = mongoose.model('Document', documentSchema);
 
-export default ActivityModel;
+export default DocumentModel;
