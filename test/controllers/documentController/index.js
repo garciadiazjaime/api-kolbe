@@ -1,7 +1,7 @@
 /* eslint max-len: [2, 500, 4] */
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import MongoUtil from 'util-mongodb';
+import DocumentModel from '../../../src/models/documentModel';
 import sinon from 'sinon';
 
 import DocumentController from '../../../src/controllers/documentController';
@@ -20,11 +20,11 @@ describe('DocumentController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'find', () => promise);
+        sinon.stub(DocumentModel, 'find', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.find.restore();
+        DocumentModel.find.restore();
       });
 
       it('resolves a promise', () => expect(controller.list(params)).to.eventually.equal(validResponse));
@@ -35,11 +35,11 @@ describe('DocumentController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'find', () => promise);
+        sinon.stub(DocumentModel, 'find', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.find.restore();
+        DocumentModel.find.restore();
       });
 
       it('rejects a promise', () => expect(controller.list(params)).to.be.rejectedWith(invalidResponse));
@@ -54,11 +54,11 @@ describe('DocumentController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'findOne', () => promise);
+        sinon.stub(DocumentModel, 'findOne', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.findOne.restore();
+        DocumentModel.findOne.restore();
       });
 
       it('resolves a promise', () => expect(controller.get(documentId)).to.eventually.equal(validResponse));
@@ -69,11 +69,11 @@ describe('DocumentController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'findOne', () => promise);
+        sinon.stub(DocumentModel, 'findOne', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.findOne.restore();
+        DocumentModel.findOne.restore();
       });
 
       it('rejects a promise', () => expect(controller.get(documentId)).to.be.rejectedWith(invalidResponse));
@@ -97,11 +97,11 @@ describe('DocumentController', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'insert', () => promise);
+        sinon.stub(DocumentModel.prototype, 'save', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.insert.restore();
+        DocumentModel.prototype.save.restore();
       });
 
       it('resolves a promise', () => {
@@ -121,11 +121,11 @@ describe('DocumentController', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'insert', () => promise);
+        sinon.stub(DocumentModel.prototype, 'save', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.insert.restore();
+        DocumentModel.prototype.save.restore();
       });
 
       it('rejects a promise', () => {
@@ -146,11 +146,11 @@ describe('DocumentController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(DocumentModel, 'update', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        DocumentModel.update.restore();
       });
 
       it('resolves a promise', () => {
@@ -163,11 +163,11 @@ describe('DocumentController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(DocumentModel, 'update', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        DocumentModel.update.restore();
       });
 
       it('rejects a promise', () => {
@@ -184,11 +184,11 @@ describe('DocumentController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(DocumentModel, 'remove', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        DocumentModel.remove.restore();
       });
 
       it('resolves a promise', () => expect(controller.delete(documentId)).to.eventually.equal(validResponse));
@@ -199,11 +199,11 @@ describe('DocumentController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'update', () => promise);
+        sinon.stub(DocumentModel, 'remove', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.update.restore();
+        DocumentModel.remove.restore();
       });
 
       it('rejects a promise', () => expect(controller.delete(documentId)).to.be.rejectedWith(invalidResponse));

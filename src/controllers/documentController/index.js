@@ -1,4 +1,5 @@
-import MongoUtil from 'util-mongodb';
+import DocumentModel from '../../models/documentModel';
+
 import _ from 'lodash';
 
 import FileUtil from '../../utils/fileUtil';
@@ -6,66 +7,55 @@ import FileUtil from '../../utils/fileUtil';
 export default class DocumentController {
 
   constructor() {
-    this.mongoUtil = new MongoUtil();
-    this.collectionName = 'document';
     this.fileUtil = new FileUtil();
   }
 
   list(params) {
     const filter = {
       status: true,
+      groupId: params.groupId,
     };
-    if (params.groupId) {
-      filter.groupId = params.groupId;
-    }
-    return this.mongoUtil.find(this.collectionName, filter, {});
+    return DocumentModel.find(filter);
   }
 
   get(identityId) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
+      _id: identityId,
       status: true,
     };
-    return this.mongoUtil.findOne(this.collectionName, filter);
+    return DocumentModel.findOne(filter);
   }
 
   save(groupId, data, files) {
     const newData = _.assign({}, JSON.parse(data.data), {
-      status: true,
-      created: new Date(),
       groupId,
     });
     return this.fileUtil.save(files.file)
       .then((fileName) => {
         newData.realFile = fileName;
-        return this.mongoUtil.insert(this.collectionName, newData);
+        const documentModel = new DocumentModel(newData);
+        return documentModel.save();
       });
   }
 
   update(identityId, data, files) {
     const promise = files && files.file ? this.fileUtil.save(files.file) : Promise.resolve();
     const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
+      _id: identityId,
     };
-    const newData = _.assign({}, JSON.parse(data.data), {
-      updated: new Date(),
-    });
+    const newData = _.assign({}, JSON.parse(data.data));
     return promise.then((fileName) => {
       if (fileName) {
         newData.realFile = fileName;
       }
-      this.mongoUtil.update(this.collectionName, newData, filter);
+      return DocumentModel.update(filter, newData);
     });
   }
 
   delete(identityId) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
+      _id: identityId,
     };
-    const newData = _.assign({}, {
-      deleted: new Date(),
-      status: false,
-    });
-    return this.mongoUtil.update(this.collectionName, newData, filter);
+    return DocumentModel.remove(filter);
   }
 }
