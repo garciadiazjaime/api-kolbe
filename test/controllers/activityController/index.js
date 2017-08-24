@@ -9,7 +9,6 @@ import ActivityController from '../../../src/controllers/activityController';
 const { expect } = chai;
 chai.use(chaiAsPromised);
 
-
 describe('ActivityController', () => {
   const controller = new ActivityController();
   const params = {};
