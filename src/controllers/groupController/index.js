@@ -2,8 +2,10 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import UserModel from '../../models/userModel';
+import StudentModel from '../../models/studentModel';
+
 import XlsxUtil from '../../utils/xlsxUtil';
-import GroupUploadUtil from '../../utils/groupUploadUtil';
 import UserController from '../userController';
 import GroupParentController from '../groupParentController';
 
@@ -12,7 +14,6 @@ export default class GroupController {
   constructor() {
     this.mongoUtil = new MongoUtil();
     this.collectionName = 'group';
-    this.groupUploadUtil = new GroupUploadUtil();
     this.userController = new UserController();
     this.groupParentController = new GroupParentController();
   }
@@ -90,38 +91,68 @@ export default class GroupController {
     });
   }
 
-  upload(groupId, file) {
+  upload(groupId, file, schoolId) {
     const dataFromFile = XlsxUtil.parseBufferToJson(file.data).pop();
     if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
-      const userByCode = this.dedupUsers(dataFromFile.data);
+      const userByCode = XlsxUtil.dedupUsers(dataFromFile.data);
       const promises = [];
-
       _.forIn(userByCode, (item) => {
-        if (item.user && item.user.username && item.user.password) {
-          this.userController.upload(item.user)
-            .then((userId) => promises.push(this.groupParentController.upload(groupId, userId)));
+        if (item.user.username && item.user.password) {
+          promises.push(new Promise((resolve, reject) => {
+            const userFilter = {
+              username: item.user.username,
+              password: item.user.password,
+              status: true,
+            };
+            UserModel.findOne(userFilter)
+              .then((user) => {
+                if (!user) {
+                  const newUser = {
+                    username: item.user.username,
+                    password: item.user.password,
+                    role: 3,
+                    entityId: groupId,
+                    schoolId,
+                  };
+                  const userModel = new UserModel(newUser);
+                  return userModel.save();
+                }
+                return Promise.resolve(user);
+              })
+              .then((user) => {
+                const filter = {
+                  groupId,
+                  parentId: user._id,
+                  status: true,
+                };
+                return StudentModel.findOne(filter).then((student) => {
+                  if (!student) {
+                    const newStudent = {
+                      groupId,
+                      parentId: user._id,
+                      schoolId,
+                    };
+                    const studentModel = new StudentModel(newStudent);
+                    return studentModel.save();
+                  }
+                  return resolve(student);
+                });
+              })
+              .catch((error) => reject(error));
+          }));
         }
       });
 
-      return Promise.all(promises).then(() => Promise.resolve('saved'));
+      return Promise.all(promises)
+        .then((results) => ({
+          status: true,
+          users: results.length,
+        }))
+        .catch((error) => ({
+          status: false,
+          error,
+        }));
     }
     return Promise.reject('wrong file data');
-  }
-
-  dedupUsers(data) {
-    const userByCode = {};
-    data.forEach((item, index) => {
-      if (index === 0) {
-        this.groupUploadUtil.setColumns(item);
-      } else {
-        const { user } = this.groupUploadUtil.getEntities(item);
-        if (!userByCode[user.password]) {
-          userByCode[user.password] = {
-            user,
-          };
-        }
-      }
-    });
-    return userByCode;
   }
 }
