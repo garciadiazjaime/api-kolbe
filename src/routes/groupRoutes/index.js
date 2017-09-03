@@ -94,8 +94,11 @@ router.delete(`/:${identiyId}`, (req, res) => {
 });
 
 router.post(`/:${identiyId}/upload`, (req, res) => {
+  const { decoded } = req;
+  const { _doc } = decoded;
+  const { schoolId } = _doc;
   controller
-    .upload(req.params[identiyId], req.files.data)
+    .upload(req.params[identiyId], req.files.data, schoolId)
     .then(data => {
       res.json({
         status: true,

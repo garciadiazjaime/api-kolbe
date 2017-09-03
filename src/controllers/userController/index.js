@@ -2,6 +2,8 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import UserModel from '../../models/userModel';
+
 export default class UserController {
 
   constructor() {
@@ -9,26 +11,35 @@ export default class UserController {
     this.collectionName = 'user';
   }
 
-  get(identityId) {
-    if (!identityId) {
-      return null;
-    }
+  get(userId) {
     const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
+      _id: userId,
       status: true,
     };
-    return this.mongoUtil.findOne(this.collectionName, filter);
+    return UserModel.findOne(filter);
   }
 
-  save(data) {
-    if (!data) {
-      return null;
-    }
-    const newData = _.assign({}, data, {
+  save(username, password, groupId, schoolId) {
+    const filter = {
+      username,
+      password,
       status: true,
-      created: new Date(),
-    });
-    return this.mongoUtil.insert(this.collectionName, newData);
+    };
+    return UserModel.findOne(filter)
+      .then((user) => {
+        if (!user) {
+          const newUser = {
+            username,
+            password,
+            role: UserController.getRole('parent'),
+            entityId: groupId,
+            schoolId,
+          };
+          const userModel = new UserModel(newUser);
+          return userModel.save();
+        }
+        return Promise.resolve(user);
+      });
   }
 
   update(identityId, data) {

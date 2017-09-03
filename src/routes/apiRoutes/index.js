@@ -10,12 +10,10 @@ import groupRoutes from '../groupRoutes';
 import studentRoutes from '../studentRoutes';
 import groupStudentRoutes from '../groupStudent';
 import parentStudentRoutes from '../parentStudentRoutes';
-import parentGroupRoutes from '../parentGroupRoutes';
 import newsletterRoutes from '../newsletterRoutes';
 import documentRoutes from '../documentRoutes';
 import activityRoutes from '../activityRoutes';
 import parentRoutes from '../parentRoutes';
-import groupParentRoutes from '../groupParentRoutes';
 import loginRoutes from '../loginRoutes';
 
 import config from '../../config';
@@ -54,12 +52,11 @@ router.use('/school', schoolRoutes);
 router.use('/location', locationRoutes);
 
 router.use('/parent/:parentId/student', parentStudentRoutes);
-router.use('/parent/:parentId/group', parentGroupRoutes);
 
 router.use('/group/:groupId/activity', activityRoutes);
 router.use('/group/:groupId/document', documentRoutes);
 router.use('/group/:groupId/newsletter', newsletterRoutes);
-router.use('/group/:groupId/parent', groupParentRoutes);
+router.use('/group/:groupId/parent', studentRoutes);
 router.use('/group/:groupId/student', groupStudentRoutes);
 router.use('/group', groupRoutes);
 
