@@ -1,8 +1,10 @@
+/* eslint max-len: [2, 500, 4] */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
 import UserController from '../userController';
+import StudentController from '../studentController';
 
 export default class GroupParentController {
 
@@ -10,18 +12,13 @@ export default class GroupParentController {
     this.collectionName = 'groupParent';
     this.mongoUtil = new MongoUtil();
     this.userController = new UserController();
+    this.studentController = new StudentController();
   }
 
   list(groupId) {
-    if (!groupId) {
-      return null;
-    }
-    const filter = {
-      status: true,
-      groupId: this.mongoUtil.getObjectID(groupId),
-    };
-    return this.mongoUtil.find(this.collectionName, filter, {})
-      .then(results => Promise.all(results.map(item => this.userController.get(item.parentId))));
+    return this.studentController
+      .list(groupId)
+      .then(students => Promise.all(students.map(student => this.userController.get(student.parentId))));
   }
 
   save(groupId, parentId) {
@@ -35,36 +32,6 @@ export default class GroupParentController {
       parentId,
     });
     return this.mongoUtil.insert(this.collectionName, newData);
-  }
-
-  update(identityId, data) {
-    const filter = {
-      _id: this.mongoUtil.getObjectID(identityId),
-    };
-    const newData = _.assign({}, data, {
-      updated: new Date(),
-    });
-    return this.mongoUtil.update(this.collectionName, newData, filter);
-  }
-
-  upload(groupId, parentId) {
-    const filter = {
-      groupId,
-      parentId,
-    };
-    return this.mongoUtil.findOne(this.collectionName, filter)
-      .then(results => this.upsert(results, groupId, parentId));
-  }
-
-  upsert(entity, groupId, parentId) {
-    if (entity) {
-      const newData = _.assign({}, entity, {
-        status: true,
-        deleted: null,
-      });
-      return this.update(entity._id, newData);
-    }
-    return this.save(groupId, parentId);
   }
 
   delete(groupId, parentId) {

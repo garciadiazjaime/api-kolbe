@@ -14,9 +14,9 @@ export default class StudentController {
   list(groupId) {
     const filter = {
       status: true,
-      group: { $in: [groupId] },
+      groupId,
     };
-    return this.mongoUtil.find('student', filter, {});
+    return StudentModel.find(filter);
   }
 
   get(identityId) {
