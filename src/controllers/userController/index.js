@@ -2,6 +2,8 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import UserModel from '../../models/userModel';
+
 export default class UserController {
 
   constructor() {
@@ -20,16 +22,16 @@ export default class UserController {
     return this.mongoUtil.findOne(this.collectionName, filter);
   }
 
-  save(data) {
-    if (!data) {
-      return null;
-    }
-    const newData = _.assign({}, data, {
-      status: true,
-      created: new Date(),
-    });
-    return this.mongoUtil.insert(this.collectionName, newData);
-  }
+  // save(data) {
+  //   if (!data) {
+  //     return null;
+  //   }
+  //   const newData = _.assign({}, data, {
+  //     status: true,
+  //     created: new Date(),
+  //   });
+  //   return this.mongoUtil.insert(this.collectionName, newData);
+  // }
 
   update(identityId, data) {
     const filter = {
@@ -78,6 +80,29 @@ export default class UserController {
       status: false,
     });
     return this.mongoUtil.update(this.collectionName, newData, filter);
+  }
+
+  save(username, password, groupId, schoolId) {
+    const filter = {
+      username,
+      password,
+      status: true,
+    };
+    return UserModel.findOne(filter)
+      .then((user) => {
+        if (!user) {
+          const newUser = {
+            username,
+            password,
+            role: UserController.getRole('parent'),
+            entityId: groupId,
+            schoolId,
+          };
+          const userModel = new UserModel(newUser);
+          return userModel.save();
+        }
+        return Promise.resolve(user);
+      });
   }
 
   static getRole(entity) {

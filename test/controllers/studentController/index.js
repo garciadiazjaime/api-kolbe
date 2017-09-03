@@ -4,6 +4,7 @@ import chaiAsPromised from 'chai-as-promised';
 import MongoUtil from 'util-mongodb';
 import sinon from 'sinon';
 
+import StudentModel from '../../../src/models/studentModel';
 import StudentController from '../../../src/controllers/studentController';
 
 const { expect } = chai;
@@ -87,11 +88,13 @@ describe('StudentController', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'insert', () => promise);
+        sinon.stub(StudentModel, 'findOne', () => Promise.resolve(null));
+        sinon.stub(StudentModel.prototype, 'save', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.insert.restore();
+        StudentModel.findOne.restore();
+        StudentModel.prototype.save.restore();
       });
 
       it('resolves a promise', () => expect(controller.save(data)).to.eventually.equal(validResponse));
@@ -102,11 +105,13 @@ describe('StudentController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
-        sinon.stub(MongoUtil.prototype, 'insert', () => promise);
+        sinon.stub(StudentModel, 'findOne', () => Promise.resolve(null));
+        sinon.stub(StudentModel.prototype, 'save', () => promise);
       });
 
       afterEach(() => {
-        MongoUtil.prototype.insert.restore();
+        StudentModel.findOne.restore();
+        StudentModel.prototype.save.restore();
       });
 
       it('rejects a promise', () => expect(controller.save(data)).to.be.rejectedWith(invalidResponse));

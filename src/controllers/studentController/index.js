@@ -2,6 +2,8 @@
 import MongoUtil from 'util-mongodb';
 import _ from 'lodash';
 
+import StudentModel from '../../models/studentModel';
+
 export default class StudentController {
 
   constructor() {
@@ -25,15 +27,25 @@ export default class StudentController {
     return this.mongoUtil.findOne(this.collectionName, filter);
   }
 
-  save(data) {
-    if (!data) {
-      return null;
-    }
-    const newData = _.assign({}, data, {
+  save(parentId, groupId, schoolId) {
+    const filter = {
+      groupId,
+      parentId,
       status: true,
-      created: new Date(),
-    });
-    return this.mongoUtil.insert(this.collectionName, newData);
+    };
+    return StudentModel.findOne(filter)
+      .then((student) => {
+        if (!student) {
+          const newStudent = {
+            groupId,
+            parentId,
+            schoolId,
+          };
+          const studentModel = new StudentModel(newStudent);
+          return studentModel.save();
+        }
+        return Promise.resolve(student);
+      });
   }
 
   update(identityId, data) {

@@ -1,5 +1,6 @@
-/* eslint max-len: [2, 500, 4] */
 import _ from 'lodash';
+import xlsx from 'node-xlsx';
+
 import UserController from '../../controllers/userController';
 
 export default class GroupUploadUtil {
@@ -106,5 +107,34 @@ export default class GroupUploadUtil {
   getDate(data) {
     const bits = data.split('');
     return new Date(`${bits[2]}${bits[3]}-${bits[0]}${bits[1]}-20${bits[4]}${bits[5]}`) || data;
+  }
+
+  dedupUsers(data) {
+    const userByCode = {};
+    const users = [];
+
+    data.forEach((item, index) => {
+      if (index === 0) {
+        this.setColumns(item);
+      } else {
+        const { user } = this.getEntities(item);
+        if (user.password && user.username && !userByCode[user.password]) {
+          userByCode[user.password] = true;
+          users.push({
+            user,
+          });
+        }
+      }
+    });
+
+    return users;
+  }
+
+  process(buffer) {
+    const dataFromFile = xlsx.parse(buffer).pop();
+    if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
+      return this.dedupUsers(dataFromFile.data);
+    }
+    return [];
   }
 }
