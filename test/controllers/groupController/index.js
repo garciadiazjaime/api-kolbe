@@ -133,6 +133,5 @@ describe('GroupController', () => {
         });
       });
     });
-
   });
 });

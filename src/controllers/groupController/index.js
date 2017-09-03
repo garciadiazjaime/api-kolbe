@@ -1,6 +1,4 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-import MongoUtil from 'util-mongodb';
-
 import GroupUploadUtil from '../../utils/groupUploadUtil';
 import UserController from '../userController';
 import StudentController from '../studentController';
@@ -8,8 +6,6 @@ import StudentController from '../studentController';
 export default class GroupController {
 
   constructor() {
-    this.mongoUtil = new MongoUtil();
-    this.collectionName = 'group';
     this.userController = new UserController();
     this.studentController = new StudentController();
   }

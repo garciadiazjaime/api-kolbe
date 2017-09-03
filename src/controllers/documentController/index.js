@@ -18,9 +18,9 @@ export default class DocumentController {
     return DocumentModel.find(filter);
   }
 
-  get(identityId) {
+  get(documentId) {
     const filter = {
-      _id: identityId,
+      _id: documentId,
       status: true,
     };
     return DocumentModel.findOne(filter);
@@ -38,10 +38,10 @@ export default class DocumentController {
       });
   }
 
-  update(identityId, data, files) {
+  update(documentId, data, files) {
     const promise = files && files.file ? this.fileUtil.save(files.file) : Promise.resolve();
     const filter = {
-      _id: identityId,
+      _id: documentId,
     };
     const newData = _.assign({}, JSON.parse(data.data));
     return promise.then((fileName) => {
@@ -52,9 +52,9 @@ export default class DocumentController {
     });
   }
 
-  delete(identityId) {
+  delete(documentId) {
     const filter = {
-      _id: identityId,
+      _id: documentId,
     };
     return DocumentModel.remove(filter);
   }
