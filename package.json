@@ -12,7 +12,8 @@
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive test",
     "webpack": "webpack --progress --colors",
     "import-school": "node build/scripts/createSchool",
-    "import-admin-users": "node build/scripts/createAdminUsers"
+    "import-admin-users": "node build/scripts/createAdminUsers",
+    "import-group-users": "node build/scripts/createGroupUsers"
   },
   "keywords": [],
   "author": "",

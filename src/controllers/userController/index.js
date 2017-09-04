@@ -7,6 +7,7 @@ export default class UserController {
     const key = entity ? entity.toUpperCase() : '';
     const roles = {
       PARENT: 3,
+      GROUP: 2,
     };
     return roles[key] || null;
   }
