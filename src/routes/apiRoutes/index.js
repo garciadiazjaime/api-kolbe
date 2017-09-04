@@ -3,17 +3,11 @@ import jwt from 'jsonwebtoken';
 
 import sessionRoutes from '../sessionRoutes';
 import schoolRoutes from '../schoolRoutes';
-import locationRoutes from '../locationRoutes';
-import levelRoutes from '../levelRoutes';
-import gradeRoutes from '../gradeRoutes';
 import groupRoutes from '../groupRoutes';
 import studentRoutes from '../studentRoutes';
-import groupStudentRoutes from '../groupStudent';
-import parentStudentRoutes from '../parentStudentRoutes';
 import newsletterRoutes from '../newsletterRoutes';
 import documentRoutes from '../documentRoutes';
 import activityRoutes from '../activityRoutes';
-import parentRoutes from '../parentRoutes';
 import loginRoutes from '../loginRoutes';
 
 import config from '../../config';
@@ -49,22 +43,13 @@ router.use((req, res, next) => {
 
 router.use('/session', sessionRoutes);
 router.use('/school', schoolRoutes);
-router.use('/location', locationRoutes);
 
-router.use('/parent/:parentId/student', parentStudentRoutes);
+router.use('/parent/:parentId/group', groupRoutes);
 
 router.use('/group/:groupId/activity', activityRoutes);
 router.use('/group/:groupId/document', documentRoutes);
 router.use('/group/:groupId/newsletter', newsletterRoutes);
 router.use('/group/:groupId/parent', studentRoutes);
-router.use('/group/:groupId/student', groupStudentRoutes);
 router.use('/group', groupRoutes);
-
-
-locationRoutes.use('/:locationId/level', levelRoutes);
-levelRoutes.use('/:levelId/grade', gradeRoutes);
-gradeRoutes.use('/:gradeId/group', groupRoutes);
-groupRoutes.use('/:groupId/student', studentRoutes);
-groupRoutes.use('/:groupId/parent', parentRoutes);
 
 export default router;

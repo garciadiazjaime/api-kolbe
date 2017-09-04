@@ -10,7 +10,7 @@ const identiyId = 'groupId';
 
 router.get('/', (req, res) => {
   controller
-    .list(req.params[parentId])
+    .list(req.params.parentId)
     .then((data) => {
       res.json({
         status: true,

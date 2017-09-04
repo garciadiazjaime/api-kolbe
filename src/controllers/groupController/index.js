@@ -10,6 +10,10 @@ export default class GroupController {
     this.studentController = new StudentController();
   }
 
+  list(parentId) {
+    return this.studentController.parentList(parentId);
+  }
+
   upload(groupId, file, schoolId) {
     const groupUploadUtil = new GroupUploadUtil();
     const users = groupUploadUtil.process(file.data);
