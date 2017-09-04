@@ -1,3 +1,5 @@
+/* eslint max-len: [2, 500, 4] */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 import mongoose from 'mongoose';
 import _ from 'lodash';
 
@@ -7,6 +9,11 @@ import UserModel from '../../models/userModel';
 import config from '../../config';
 
 mongoose.Promise = global.Promise;
+
+const cleanString = string => string.toLowerCase()
+  .replace(/\s/g, '')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, "");
 
 class CreateGroupUsers {
 
@@ -43,7 +50,7 @@ class CreateGroupUsers {
   saveUsers(users) {
     const promises = [];
     if (_.isArray(users) && users.length) {
-      users.map((user) => {
+      users.forEach((user) => {
         const userModel = new UserModel(user);
         promises.push(userModel.save());
       });
@@ -65,11 +72,7 @@ class CreateGroupUsers {
   }
 }
 
-function cleanString(string) {
-  return string.toLowerCase().replace(/\s/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-}
-
 const createGroupUsers = new CreateGroupUsers();
-const dbConnectionPromise = mongoose.connect(config.get('db.url'), {
+mongoose.connect(config.get('db.url'), {
   useMongoClient: true,
 }).then(createGroupUsers.process());
