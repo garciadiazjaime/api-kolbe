@@ -1,7 +1,6 @@
 /* eslint max-len: [2, 500, 4] */
 import UserController from '../userController';
 import StudentModel from '../../models/studentModel';
-import UserModel from '../../models/userModel';
 
 export default class StudentController {
 
@@ -57,7 +56,7 @@ export default class StudentController {
       .then(() => StudentModel.find({ parentId }))
       .then((students) => {
         if (!students.length) {
-          return UserModel.remove({ _id: parentId });
+          return this.userController.delete(parentId);
         }
         return Promise.resolve(true);
       });
