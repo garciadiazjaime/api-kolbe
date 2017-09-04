@@ -1,7 +1,6 @@
-import DocumentModel from '../../models/documentModel';
-
 import _ from 'lodash';
 
+import DocumentModel from '../../models/documentModel';
 import FileUtil from '../../utils/fileUtil';
 
 export default class DocumentController {
