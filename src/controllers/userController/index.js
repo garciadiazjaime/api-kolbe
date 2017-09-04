@@ -94,9 +94,6 @@ export default class UserController {
   static getRole(entity) {
     const key = entity ? entity.toUpperCase() : '';
     const roles = {
-      ADMIN: 0,
-      DIRECTOR: 1,
-      PROFESSOR: 2,
       PARENT: 3,
     };
     return roles[key] || null;

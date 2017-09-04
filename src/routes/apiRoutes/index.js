@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 import sessionRoutes from '../sessionRoutes';
 import schoolRoutes from '../schoolRoutes';
-import locationRoutes from '../locationRoutes';
 import groupRoutes from '../groupRoutes';
 import studentRoutes from '../studentRoutes';
 import parentStudentRoutes from '../parentStudentRoutes';
@@ -45,7 +44,6 @@ router.use((req, res, next) => {
 
 router.use('/session', sessionRoutes);
 router.use('/school', schoolRoutes);
-router.use('/location', locationRoutes);
 
 router.use('/parent/:parentId/student', parentStudentRoutes);
 router.use('/parent/:parentId/group', groupRoutes);
