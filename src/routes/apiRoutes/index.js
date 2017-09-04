@@ -5,7 +5,6 @@ import sessionRoutes from '../sessionRoutes';
 import schoolRoutes from '../schoolRoutes';
 import groupRoutes from '../groupRoutes';
 import studentRoutes from '../studentRoutes';
-import parentStudentRoutes from '../parentStudentRoutes';
 import newsletterRoutes from '../newsletterRoutes';
 import documentRoutes from '../documentRoutes';
 import activityRoutes from '../activityRoutes';
@@ -45,7 +44,6 @@ router.use((req, res, next) => {
 router.use('/session', sessionRoutes);
 router.use('/school', schoolRoutes);
 
-router.use('/parent/:parentId/student', parentStudentRoutes);
 router.use('/parent/:parentId/group', groupRoutes);
 
 router.use('/group/:groupId/activity', activityRoutes);
