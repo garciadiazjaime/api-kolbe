@@ -19,6 +19,14 @@ export default class StudentController {
       .then(students => Promise.all(students.map(student => this.userController.get(student.parentId))));
   }
 
+  parentList(parentId) {
+    const filter = {
+      status: true,
+      parentId,
+    };
+    return StudentModel.find(filter);
+  }
+
   save(parentId, groupId, schoolId) {
     const filter = {
       groupId,
