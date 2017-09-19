@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3033
 
-CMD [ "npm", "start" ]
+CMD [ "node", "./build/server.js" ]
