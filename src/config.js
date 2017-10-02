@@ -77,8 +77,7 @@ const config = convict({
   dataFolder: {
     doc: 'Files',
     format: String,
-    default: `${process.env.PWD}/data`,
-    env: 'OPENSHIFT_DATA_DIR',
+    default: '/data',
   },
 });
 

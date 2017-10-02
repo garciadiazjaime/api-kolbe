@@ -8,7 +8,7 @@ import config from '../../config';
 
 mongoose.Promise = global.Promise;
 
-const userData = require(`${config.get('dataFolder')}/user.json`);
+const userData = require('./user.json');
 const dbConnectionPromise = mongoose.connect(config.get('db.url'), {
   useMongoClient: true,
 });
