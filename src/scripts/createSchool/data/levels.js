@@ -19,7 +19,7 @@ module.exports = (location) => {
       return [getLevel('Preescolar', 1),
       getLevel('Primaria', 2),
       getLevel('Secundaria', 3),
-      getLevel('Preparatoria')];
+      getLevel('Preparatoria', 4)];
     default:
       return [getLevel('Preescolar', 1),
       getLevel('Primaria', 2),

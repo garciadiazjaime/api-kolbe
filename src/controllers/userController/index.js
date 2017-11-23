@@ -1,4 +1,4 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+import { assign } from 'lodash';
 import UserModel from '../../models/userModel';
 
 export default class UserController {
@@ -20,27 +20,9 @@ export default class UserController {
     return UserModel.findOne(filter);
   }
 
-  save(username, password, groupId, schoolId) {
-    const filter = {
-      username,
-      password,
-      status: true,
-    };
-    return UserModel.findOne(filter)
-      .then((user) => {
-        if (!user) {
-          const newUser = {
-            username,
-            password,
-            role: UserController.getRole('parent'),
-            entityId: groupId,
-            schoolId,
-          };
-          const userModel = new UserModel(newUser);
-          return userModel.save();
-        }
-        return Promise.resolve(user);
-      });
+  save(user, entityId, schoolId) {
+    return this.searchUser(user)
+      .then(_user => this.upsetAccount(user, _user, entityId, schoolId));
   }
 
   delete(userId) {
@@ -48,5 +30,25 @@ export default class UserController {
       _id: userId,
     };
     return UserModel.remove(filter);
+  }
+
+  searchUser(user) {
+    const filter = {
+      code: user.code,
+    };
+    return UserModel.findOne(filter);
+  }
+
+  upsetAccount(user, currentUser, entityId, schoolId) {
+    if (!currentUser) {
+      const newUser = assign({}, user, {
+        entityId,
+        schoolId,
+      });
+      return new UserModel(newUser).save();
+    }
+    currentUser.username = user.username; // eslint-disable-line
+    currentUser.updated = new Date(); // eslint-disable-line
+    return currentUser.save();
   }
 }
