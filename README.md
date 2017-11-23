@@ -14,7 +14,7 @@ b) let's run dev server
 `npm run webpack`
 `npm run dev`
 
-By default server will run on http://127.0.0.1:3000/
+By default server will run on http://127.0.0.1:3033/
 
 Login rch
 rhc -l setup email
@@ -36,3 +36,8 @@ rhc env list -a app
 Code to increase jslint max line length limit
 /* eslint max-len: [2, 500, 4] */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+
+docker build -t garciadiazjaime/api-kolbe .
+docker run -d -p 49160:3033 garciadiazjaime/api-kolbe
+docker push garciadiazjaime/api-kolbe
+docker pull garciadiazjaime/api-kolbe

@@ -4,7 +4,6 @@ bower_components
 npm-debug.log
 .ruby-version
 newrelic_agent.log
-data
+/data
 build
 secrets.txt
-build

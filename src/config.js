@@ -11,13 +11,13 @@ const config = convict({
   ipaddress: {
     doc: 'The IP address to bind.',
     format: 'ipaddress',
-    default: '127.0.0.1',
+    default: '0.0.0.0',
     env: 'NODE_IP',
   },
   port: {
     doc: 'The port to bind.',
     format: 'port',
-    default: 3000,
+    default: 3033,
     env: 'NODE_PORT',
   },
   db: {
@@ -77,8 +77,7 @@ const config = convict({
   dataFolder: {
     doc: 'Files',
     format: String,
-    default: `${process.env.PWD}/data`,
-    env: 'OPENSHIFT_DATA_DIR',
+    default: '/data',
   },
 });
 

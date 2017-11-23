@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isArray } from 'lodash';
 import xlsx from 'node-xlsx';
 
 import UserController from '../../controllers/userController';
@@ -47,7 +47,7 @@ export default class GroupUploadUtil {
   }
 
   setColumns(row) {
-    if (!_.isArray(row) || !row.length) {
+    if (!isArray(row) || !row.length) {
       return false;
     }
     const rowUpperCase = row.map(item => item.toUpperCase());
@@ -98,22 +98,28 @@ export default class GroupUploadUtil {
   }
 
   getJsDateFromExcel(excelDate) {
-    // https://gist.github.com/christopherscott/2782634
-    const date = new Date((excelDate - (25567 + 2))*86400*1000);
-    const bits = date.toJSON().split('T')[0].split('-')
-    return new Date(`${bits[1]}-${bits[2]}-${bits[0]}`) || excelDate;
+    if(excelDate) {
+      // https://gist.github.com/christopherscott/2782634
+      const date = new Date((excelDate - (25567 + 2))*86400*1000);
+      const bits = date.toJSON().split('T')[0].split('-')
+      return new Date(`${bits[1]}-${bits[2]}-${bits[0]}`) || excelDate;
+    }
+    return null;
   }
 
   getDate(data) {
-    const bits = data.split('');
-    return new Date(`${bits[2]}${bits[3]}-${bits[0]}${bits[1]}-20${bits[4]}${bits[5]}`) || data;
+    if (data) {
+      const bits = data.split('');
+      return new Date(`${bits[2]}${bits[3]}-${bits[0]}${bits[1]}-20${bits[4]}${bits[5]}`) || data;
+    }
+    return null;
   }
 
   dedupUsers(data) {
     const userByCode = {};
     const users = [];
 
-    data.forEach((item, index) => {
+    data.filter(item => isArray(item) && item.length).forEach((item, index) => {
       if (index === 0) {
         this.setColumns(item);
       } else {
@@ -132,7 +138,7 @@ export default class GroupUploadUtil {
 
   process(buffer) {
     const dataFromFile = xlsx.parse(buffer).pop();
-    if (_.isArray(dataFromFile.data) && dataFromFile.data.length) {
+    if (isArray(dataFromFile.data) && dataFromFile.data.length) {
       return this.dedupUsers(dataFromFile.data);
     }
     return [];
