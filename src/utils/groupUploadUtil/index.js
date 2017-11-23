@@ -8,35 +8,23 @@ export default class GroupUploadUtil {
   constructor() {
     this.columns = {
       group: {
-        header: 'MH_GRUPO',
+        header: 'GRUPO',
         index: null,
       },
       lastname: {
-        header: 'MH_APT_ALU',
+        header: 'PATERNO',
         index: null,
       },
       lastname2: {
-        header: 'MH_AMT_ALU',
+        header: 'MATERNO',
         index: null,
       },
       name: {
-        header: 'MH_NOM_ALU',
-        index: null,
-      },
-      studentCode: {
-        header: 'MH_COD_ALU',
-        index: null,
-      },
-      dob: {
-        header: 'MH_FEC_NAC',
-        index: null,
-      },
-      registrationDate: {
-        header: 'MH_FEC_ALT',
+        header: 'NOMBRE',
         index: null,
       },
       familyCode: {
-        header: 'MH_COD_FAM',
+        header: 'COD_FAM',
         index: null,
       },
       email: {
@@ -51,13 +39,25 @@ export default class GroupUploadUtil {
       return false;
     }
     const rowUpperCase = row.map(item => item.toUpperCase());
-    let column = null;
-    for(column in this.columns) {
-      const index = rowUpperCase.indexOf(this.columns[column].header.toUpperCase());
+    Object.keys(this.columns).forEach(key => {
+      const index = rowUpperCase.indexOf(this.columns[key].header.toUpperCase());
       if (index !== -1) {
-        this.columns[column].index = index;
+        this.columns[key].index = index;
+      }
+    });
+    return true;
+  }
+
+  validColumns(row) {
+    this.setColumns(row);
+
+    for(let column in this.columns) {
+      if (this.columns[column].index === null) {
+        return false
       }
     }
+
+    return true;
   }
 
   getEntities(row) {
@@ -82,9 +82,6 @@ export default class GroupUploadUtil {
       lastname: data[this.columns.lastname.index],
       lastname2: data[this.columns.lastname2.index],
       name: data[this.columns.name.index],
-      code: `${data[this.columns.studentCode.index]}`,
-      dob: this.getJsDateFromExcel(data[this.columns.dob.index]),
-      registrationDate: this.getDate(data[this.columns.registrationDate.index]),
     };
   }
 
@@ -116,31 +113,31 @@ export default class GroupUploadUtil {
   }
 
   dedupUsers(data) {
-    const userByCode = {};
-    const users = [];
+    let users = {};
 
-    data.filter(item => isArray(item) && item.length).forEach((item, index) => {
-      if (index === 0) {
-        this.setColumns(item);
-      } else {
-        const { user } = this.getEntities(item);
-        if (user.password && user.username && !userByCode[user.password]) {
-          userByCode[user.password] = true;
-          users.push({
-            user,
-          });
+    if (isArray(data) && data.length) {
+      users = data.filter(item => isArray(item) && item.length).reduce((users, item) => {
+        const { group, user } = this.getEntities(item);
+        if (user.code
+          && user.username
+          && user.username.indexOf('@') !== -1
+          && !users[user.code]) {
+          users[user.code] = { user, group };
         }
-      }
-    });
+        return users;
+      }, {});
+    }
 
-    return users;
+    return Object.keys(users).map(key => users[key]);
   }
 
   process(buffer) {
-    const dataFromFile = xlsx.parse(buffer).pop();
-    if (isArray(dataFromFile.data) && dataFromFile.data.length) {
+    const dataFromFile = xlsx.parse(buffer).shift();
+
+    if (this.validColumns(dataFromFile.data.shift())) {
       return this.dedupUsers(dataFromFile.data);
     }
+
     return [];
   }
 }

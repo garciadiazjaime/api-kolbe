@@ -17,7 +17,7 @@ const config = convict({
   port: {
     doc: 'The port to bind.',
     format: 'port',
-    default: 3033,
+    default: 3000,
     env: 'NODE_PORT',
   },
   db: {
