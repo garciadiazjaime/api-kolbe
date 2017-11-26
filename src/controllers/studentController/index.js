@@ -10,7 +10,6 @@ export default class StudentController {
 
   list(groupId) {
     const filter = {
-      status: true,
       groupId,
     };
 
@@ -20,24 +19,22 @@ export default class StudentController {
 
   parentList(parentId) {
     const filter = {
-      status: true,
       parentId,
     };
     return StudentModel.find(filter);
   }
 
-  save(parentId, groupId, schoolId) {
+  save(parent, groupId, schoolId) {
     const filter = {
+      parentId: parent.id,
       groupId,
-      parentId,
-      status: true,
     };
     return StudentModel.findOne(filter)
-      .then((student) => {
+      .then(student => {
         if (!student) {
           const newStudent = {
             groupId,
-            parentId,
+            parentId: parent.id,
             schoolId,
           };
           const studentModel = new StudentModel(newStudent);
@@ -45,6 +42,30 @@ export default class StudentController {
         }
         return Promise.resolve(student);
       });
+  }
+
+  saveBulk(parent, groups, schoolId, locationMap) {
+    const promises = groups.map(group => {
+      const _group = locationMap[group.level][group.grade][group.group.toUpperCase()]; // eslint-disable-line
+      const filter = {
+        parentId: parent.id,
+        groupId: _group.id,
+      };
+      return StudentModel.findOne(filter)
+        .then(student => {
+          if (!student) {
+            const newStudent = {
+              groupId: _group.id,
+              parentId: parent.id,
+              schoolId,
+            };
+            const studentModel = new StudentModel(newStudent);
+            return studentModel.save();
+          }
+          return Promise.resolve(student);
+        });
+    });
+    return Promise.all(promises);
   }
 
   delete(groupId, parentId) {

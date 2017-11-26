@@ -9,13 +9,30 @@ const controller = new StudentController();
 router.get('/', (req, res) => {
   controller
     .list(req.params.groupId)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
+      res.json({
+        status: false,
+        error,
+      });
+    });
+});
+
+router.get('/:parentId', (req, res) => {
+  controller
+    .parentList(req.params.parentId)
+    .then(data => {
+      res.json({
+        status: true,
+        data,
+      });
+    })
+    .catch(error => {
       res.json({
         status: false,
         error,
@@ -26,13 +43,13 @@ router.get('/', (req, res) => {
 router.delete('/:parentId', (req, res) => {
   controller
     .delete(req.params.groupId, req.params.parentId)
-    .then((data) => {
+    .then(data => {
       res.json({
         status: true,
         data,
       });
     })
-    .catch((error) => {
+    .catch(error => {
       res.json({
         status: false,
         error,

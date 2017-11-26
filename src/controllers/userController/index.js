@@ -15,14 +15,13 @@ export default class UserController {
   get(userId) {
     const filter = {
       _id: userId,
-      status: true,
     };
     return UserModel.findOne(filter);
   }
 
-  save(user, entityId, schoolId) {
-    return this.searchUser(user)
-      .then(_user => this.upsetAccount(user, _user, entityId, schoolId));
+  save(user, locationId, schoolId) {
+    return this.searchParent(user)
+      .then(_user => this.upsetParent(user, _user, locationId, schoolId));
   }
 
   delete(userId) {
@@ -32,18 +31,20 @@ export default class UserController {
     return UserModel.remove(filter);
   }
 
-  searchUser(user) {
+  searchParent(user) {
     const filter = {
-      code: user.code,
+      username: user.username,
+      role: UserController.getRole('parent'),
     };
     return UserModel.findOne(filter);
   }
 
-  upsetAccount(user, currentUser, entityId, schoolId) {
+  upsetParent(user, currentUser, locationId, schoolId) {
     if (!currentUser) {
       const newUser = assign({}, user, {
-        entityId,
+        entityId: locationId,
         schoolId,
+        role: UserController.getRole('parent'),
       });
       return new UserModel(newUser).save();
     }
