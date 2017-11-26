@@ -8,7 +8,6 @@ const studentSchema = new Schema({
   groupId: { type: ObjectId, required: true },
   parentId: { type: ObjectId, required: true },
   schoolId: { type: ObjectId, required: true },
-  status: { type: Boolean, default: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
 });

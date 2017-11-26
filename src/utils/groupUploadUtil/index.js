@@ -1,5 +1,7 @@
 import { isArray } from 'lodash';
 import xlsx from 'node-xlsx';
+import md5 from 'md5';
+
 
 import UserController from '../../controllers/userController';
 
@@ -86,9 +88,9 @@ export default class GroupUploadUtil {
   }
 
   getUser(data) {
+    const bits = data[this.columns.email.index].split('@');
     return {
-      password: `${data[this.columns.familyCode.index]}`,
-      code: `${data[this.columns.familyCode.index]}`,
+      password: bits[0],
       username: data[this.columns.email.index],
       role: UserController.getRole('parent'),
     };
@@ -112,17 +114,14 @@ export default class GroupUploadUtil {
     return null;
   }
 
-  dedupUsers(data) {
+  dedupUsersFromGroup(data) {
     let users = {};
 
     if (isArray(data) && data.length) {
       users = data.filter(item => isArray(item) && item.length).reduce((users, item) => {
         const { group, user } = this.getEntities(item);
-        if (user.code
-          && user.username
-          && user.username.indexOf('@') !== -1
-          && !users[user.code]) {
-          users[user.code] = { user, group };
+        if (user.username && user.username.indexOf('@') !== -1) {
+          users[user.username] = { user, group };
         }
         return users;
       }, {});
@@ -131,13 +130,54 @@ export default class GroupUploadUtil {
     return Object.keys(users).map(key => users[key]);
   }
 
-  process(buffer) {
+  dedupUsers(data) {
+    let users = {};
+
+    if (isArray(data) && data.length) {
+      users = data.filter(item => isArray(item) && item.length).reduce((_users, item) => {
+        const { group, user } = this.getEntities(item);
+        if (user.username && user.username.indexOf('@') !== -1) {
+          if (!_users[user.username]) {
+            _users[user.username] = {
+              user,
+              groups: [],
+            };
+          }
+          const key = md5(JSON.stringify(group));
+          if (!_users[user.username][key]) {
+            _users[user.username]['groups'].push(group);
+            _users[user.username][key] = true;
+          }
+        }
+        return _users;
+      }, {});
+    }
+
+    return Object.keys(users).reduce((_users, username) => {
+      const groups = Object.keys(users[username]).map(key => users[username][key]);
+      _users.push({
+        user: users[username].user,
+        groups: users[username].groups,
+      });
+      return _users;
+    }, []);
+  }
+
+  doProcess(buffer, isGroup = false) {
     const dataFromFile = xlsx.parse(buffer).shift();
 
     if (this.validColumns(dataFromFile.data.shift())) {
-      return this.dedupUsers(dataFromFile.data);
+      return isGroup ? this.dedupUsersFromGroup(dataFromFile.data) : this.dedupUsers(dataFromFile.data);
     }
 
     return [];
+  }
+
+  process(buffer) {
+    return this.doProcess(buffer);
+  }
+
+  processGroup(buffer) {
+    return this.doProcess(buffer, true);
   }
 }

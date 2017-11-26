@@ -1,0 +1,382 @@
+[{
+  "_id": "5a14d80dedfcef150bb28f2d",
+  "location": [{
+    "id": "5a14d80dedfcef150bb28ea2",
+    "name": "Santa Fé",
+    "code": "santa_fe",
+    "weight": 1,
+    "status": true,
+    "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+    "level": [{
+      "id": "5a14d80dedfcef150bb28ea3",
+      "name": "Preescolar",
+      "weight": 1,
+      "status": true,
+      "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+      "grade": [{
+        "id": "5a14d80dedfcef150bb28ea4",
+        "name": "1ro",
+        "weight": 1,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ea5",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ea6",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ea7",
+        "name": "2do",
+        "weight": 2,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ea8",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ea9",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28eaa",
+        "name": "3ro",
+        "weight": 3,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28eab",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28eac",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }]
+    }, {
+      "id": "5a14d80dedfcef150bb28ead",
+      "name": "Primaria",
+      "weight": 2,
+      "status": true,
+      "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+      "grade": [{
+        "id": "5a14d80dedfcef150bb28eae",
+        "name": "1ro",
+        "weight": 1,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28eaf",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28eb0",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28eb1",
+        "name": "2do",
+        "weight": 2,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28eb2",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28eb3",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28eb4",
+        "name": "3ro",
+        "weight": 3,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28eb5",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28eb6",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28eb7",
+        "name": "4to",
+        "weight": 4,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28eb8",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28eb9",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28eba",
+        "name": "5to",
+        "weight": 5,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ebb",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ebc",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ebd",
+        "name": "6to",
+        "weight": 6,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ebe",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ebf",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }]
+    }, {
+      "id": "5a14d80dedfcef150bb28ec0",
+      "name": "Secundaria",
+      "weight": 3,
+      "status": true,
+      "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+      "grade": [{
+        "id": "5a14d80dedfcef150bb28ec1",
+        "name": "1ro",
+        "weight": 1,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ec2",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ec3",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ec4",
+        "name": "2do",
+        "weight": 2,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ec5",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ec6",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ec7",
+        "name": "3ro",
+        "weight": 3,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ec8",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ec9",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }]
+    }, {
+      "id": "5a14d80dedfcef150bb28eca",
+      "name": "Preparatoria",
+      "weight": 4,
+      "status": true,
+      "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+      "grade": [{
+        "id": "5a14d80dedfcef150bb28ecb",
+        "name": "1ro",
+        "weight": 1,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ecc",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ecd",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ece",
+        "name": "2do",
+        "weight": 2,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ecf",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ed0",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ed1",
+        "name": "3ro",
+        "weight": 3,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ed2",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ed3",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ed4",
+        "name": "4to",
+        "weight": 4,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ed5",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ed6",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28ed7",
+        "name": "5to",
+        "weight": 5,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28ed8",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28ed9",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }, {
+        "id": "5a14d80dedfcef150bb28eda",
+        "name": "6to",
+        "weight": 6,
+        "status": true,
+        "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)",
+        "group": [{
+          "id": "5a14d80dedfcef150bb28edb",
+          "name": "A",
+          "weight": 1,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }, {
+          "id": "5a14d80dedfcef150bb28edc",
+          "name": "B",
+          "weight": 2,
+          "status": true,
+          "created": "Tue Nov 21 2017 19:51:09 GMT-0600 (CST)"
+        }]
+      }]
+    }]
+  }]
+}]

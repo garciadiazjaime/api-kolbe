@@ -16,6 +16,8 @@ describe('GroupController', () => {
 
   describe('#upload', () => {
     const groupId = 1;
+    const fileUrl = `${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS-HEADER2.xlsx`;
+    const totalUsers = 367;
 
     context('when user and student are found', () => {
       describe('no new data is created', () => {
@@ -29,7 +31,7 @@ describe('GroupController', () => {
             schoolId: '598a59faf0fdc57c267405d5',
             updated: '2017-08-29T02:16:18.051Z',
             created: '2017-08-29T02:16:18.051Z',
-            status: true,
+            save: () => Promise.resolve(user),
           };
           const student = {
             _id: '59a6123064f7a9a14c53946f',
@@ -38,24 +40,26 @@ describe('GroupController', () => {
             schoolId: '598a59faf0fdc57c267405d5',
             updated: '2017-08-30T01:17:36.522Z',
             created: '2017-08-30T01:17:36.521Z',
-            status: true,
           };
           sinon.stub(UserModel, 'findOne', () => Promise.resolve(user));
           sinon.stub(StudentModel, 'findOne', () => Promise.resolve(student));
+          sinon.stub(UserModel.prototype, 'save', () => Promise.resolve(user));
         });
 
         afterEach(() => {
           UserModel.findOne.restore();
           StudentModel.findOne.restore();
+          UserModel.prototype.save.restore();
         });
 
         it('returns expected values', () => {
           const schoolId = 'schoolId';
-          const promiseResults = controller.upload(groupId, {
-            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
+          const locationId = 'locationId';
+          const promiseResults = controller.upload(groupId, locationId, {
+            data: fs.readFileSync(fileUrl),
           }, schoolId);
 
-          return expect(promiseResults).to.eventually.deep.equal({ status: true, users: 45 });
+          return expect(promiseResults).to.eventually.deep.equal({ status: true, users: totalUsers });
         });
       });
     });
@@ -73,6 +77,7 @@ describe('GroupController', () => {
             updated: '2017-08-29T02:16:18.051Z',
             created: '2017-08-29T02:16:18.051Z',
             status: true,
+            save: () => Promise.resolve(user),
           };
           sinon.stub(UserModel, 'findOne', () => Promise.resolve(user));
           sinon.stub(StudentModel, 'findOne', () => Promise.resolve(null));
@@ -87,11 +92,12 @@ describe('GroupController', () => {
 
         it('returns expected values', () => {
           const schoolId = 'schoolId';
-          const promiseResults = controller.upload(groupId, {
-            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
+          const locationId = 'locationId';
+          const promiseResults = controller.upload(groupId, locationId, {
+            data: fs.readFileSync(fileUrl),
           }, schoolId);
 
-          return expect(promiseResults).to.eventually.deep.equal({ status: true, users: 45 });
+          return expect(promiseResults).to.eventually.deep.equal({ status: true, users: totalUsers });
         });
       });
     });
@@ -125,11 +131,12 @@ describe('GroupController', () => {
 
         it('returns expected values', () => {
           const schoolId = 'schoolId';
-          const promiseResults = controller.upload(groupId, {
-            data: fs.readFileSync(`${process.env.PWD}/test/stub/LISTA_DE_ALUMNOS.xlsx`),
+          const locationId = 'locationId';
+          const promiseResults = controller.upload(groupId, locationId, {
+            data: fs.readFileSync(fileUrl),
           }, schoolId);
 
-          return expect(promiseResults).to.eventually.deep.equal({ status: true, users: 45 });
+          return expect(promiseResults).to.eventually.deep.equal({ status: true, users: totalUsers });
         });
       });
     });

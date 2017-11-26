@@ -98,7 +98,7 @@ router.post(`/:${identiyId}/upload`, (req, res) => {
   const { _doc } = decoded;
   const { schoolId } = _doc;
   controller
-    .upload(req.params[identiyId], req.files.data, schoolId)
+    .upload(req.params[identiyId], req.query.locationId, req.files.data, schoolId)
     .then(data => {
       res.json({
         status: true,
