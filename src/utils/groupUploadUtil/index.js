@@ -90,7 +90,8 @@ export default class GroupUploadUtil {
   getUser(data) {
     const bits = data[this.columns.email.index].split('@');
     return {
-      password: bits[0],
+      password: data[this.columns.familyCode.index],
+      code: data[this.columns.familyCode.index],
       username: data[this.columns.email.index],
       role: UserController.getRole('parent'),
     };
