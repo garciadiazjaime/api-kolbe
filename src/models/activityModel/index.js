@@ -11,6 +11,7 @@ const activitySchema = new Schema({
   status: { type: Boolean, default: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
+  groups: { type: Array, default: [] },
 });
 
 const ActivityModel = mongoose.model('Activity', activitySchema);
