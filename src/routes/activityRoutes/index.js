@@ -77,7 +77,7 @@ router.put(`/:${identiyId}`, (req, res) => {
 
 router.delete(`/:${identiyId}`, (req, res) => {
   controller
-    .delete(req.params[identiyId], req.body)
+    .delete(req.params)
     .then(data => {
       res.json({
         status: true,

@@ -8,7 +8,7 @@ import config from '../../config';
 
 mongoose.Promise = global.Promise;
 
-const userData = require('./user.json');
+const userData = require('./user.json'); //eslint-disable-line
 const dbConnectionPromise = mongoose.connect(config.get('db.url'), {
   useMongoClient: true,
 });
