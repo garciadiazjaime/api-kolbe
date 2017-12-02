@@ -151,15 +151,20 @@ describe('ActivityController', () => {
   describe('#delete', () => {
     const locationId = 1;
     const validResponse = {};
+    const activity = {
+      groups: [],
+    };
 
     describe('valid case', () => {
       const promise = new Promise((resolve) => resolve(validResponse));
 
       beforeEach(() => {
+        sinon.stub(ActivityModel, 'findOne', () => Promise.resolve(activity));
         sinon.stub(ActivityModel, 'remove', () => promise);
       });
 
       afterEach(() => {
+        ActivityModel.findOne.restore();
         ActivityModel.remove.restore();
       });
 
@@ -171,10 +176,12 @@ describe('ActivityController', () => {
       const promise = new Promise((_, reject) => reject(invalidResponse));
 
       beforeEach(() => {
+        sinon.stub(ActivityModel, 'findOne', () => Promise.resolve(activity));
         sinon.stub(ActivityModel, 'remove', () => promise);
       });
 
       afterEach(() => {
+        ActivityModel.findOne.restore();
         ActivityModel.remove.restore();
       });
 

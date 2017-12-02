@@ -7,4 +7,4 @@ newrelic_agent.log
 /data
 build
 secrets.txt
-user.json
+**/users.json

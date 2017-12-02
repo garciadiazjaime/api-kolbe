@@ -1,11 +1,11 @@
+import { assign } from 'lodash';
 import ActivityModel from '../../models/activityModel';
 
 export default class ActivityController {
 
   list(params) {
     const filter = {
-      status: true,
-      groupId: params.groupId,
+      groups: params.groupId,
     };
     return ActivityModel.find(filter);
   }
@@ -13,7 +13,6 @@ export default class ActivityController {
   get(activityId) {
     const filter = {
       _id: activityId,
-      status: true,
     };
     return ActivityModel.findOne(filter);
   }
@@ -30,10 +29,21 @@ export default class ActivityController {
     return ActivityModel.update(filter, data);
   }
 
-  delete(activityId) {
-    const filter = {
-      _id: activityId,
-    };
-    return ActivityModel.remove(filter);
+  delete(params) {
+    const { activityId, groupId } = params;
+    return this.get(activityId)
+      .then((activity) => {
+        const { groups } = activity;
+        const newGroups = groups.filter(gId => gId !== groupId);
+        if (newGroups.length) {
+          return this.update(activityId, assign(activity, {
+            groups: newGroups,
+          }));
+        }
+        const filter = {
+          _id: activityId,
+        };
+        return ActivityModel.remove(filter);
+      });
   }
 }

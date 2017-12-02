@@ -43,8 +43,7 @@ router.get(`/:${identiyId}`, (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  controller
-    .save(req.params[parentId], req.body)
+  controller.save(req.params[parentId], req.body)
     .then((data) => {
       res.json({
         status: true,
