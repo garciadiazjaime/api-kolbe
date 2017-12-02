@@ -8,7 +8,6 @@ const activitySchema = new Schema({
   description: { type: String, required: true },
   date: { type: Date, required: true },
   groupId: { type: ObjectId, required: true },
-  status: { type: Boolean, default: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   groups: { type: Array, default: [] },
