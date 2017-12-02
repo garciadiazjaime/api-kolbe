@@ -4,11 +4,7 @@ export default class ActivityController {
 
   list(params) {
     const filter = {
-      $or: [{
-        groupId: params.groupId,
-      }, {
-        groups: params.groupId,
-      }],
+      groups: params.groupId,
     };
     return ActivityModel.find(filter);
   }
@@ -16,7 +12,6 @@ export default class ActivityController {
   get(activityId) {
     const filter = {
       _id: activityId,
-      status: true,
     };
     return ActivityModel.findOne(filter);
   }

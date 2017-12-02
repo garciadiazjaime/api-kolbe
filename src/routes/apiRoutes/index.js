@@ -48,7 +48,9 @@ router.use('/location', locationRoutes);
 
 router.use('/parent/:parentId/group', groupRoutes);
 
+router.use('/activity', activityRoutes);
 router.use('/group/:groupId/activity', activityRoutes);
+
 router.use('/group/:groupId/document', documentRoutes);
 router.use('/group/:groupId/newsletter', newsletterRoutes);
 router.use('/group/:groupId/parent', studentRoutes);
