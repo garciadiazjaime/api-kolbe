@@ -7,7 +7,9 @@ export default class ActivityController {
     const filter = {
       groups: params.groupId,
     };
-    return ActivityModel.find(filter);
+    return ActivityModel.find(filter).sort({
+      date: -1,
+    });
   }
 
   get(activityId) {
