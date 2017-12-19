@@ -15,33 +15,41 @@ describe('ActivityController', () => {
 
   describe('#list', () => {
     describe('valid case', () => {
-      const validResponse = [{}];
-      const promise = new Promise((resolve) => resolve(validResponse));
+      const mockFind = {
+        sort: () => Promise.resolve(true),
+      };
 
       beforeEach(() => {
-        sinon.stub(ActivityModel, 'find', () => promise);
+        sinon.stub(ActivityModel, 'find', () => mockFind);
       });
 
       afterEach(() => {
         ActivityModel.find.restore();
       });
 
-      it('resolves a promise', () => expect(controller.list(params)).to.eventually.equal(validResponse));
+      it('resolves a promise', () => {
+        expect(controller.list(params)).to.eventually.equal(true);
+        expect(ActivityModel.find.called).to.equal(true);
+      });
     });
 
     describe('invalid case', () => {
-      const invalidResponse = 'error';
-      const promise = new Promise((_, reject) => reject(invalidResponse));
+      const mockFind = {
+        sort: () => Promise.reject(false),
+      };
 
       beforeEach(() => {
-        sinon.stub(ActivityModel, 'find', () => promise);
+        sinon.stub(ActivityModel, 'find', () => mockFind);
       });
 
       afterEach(() => {
         ActivityModel.find.restore();
       });
 
-      it('rejects a promise', () => expect(controller.list(params)).to.be.rejectedWith(invalidResponse));
+      it('rejects a promise', () => {
+        expect(controller.list(params)).to.be.rejectedWith(false);
+        expect(ActivityModel.find.called).to.equal(true);
+      });
     });
   });
 

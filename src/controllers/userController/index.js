@@ -48,7 +48,8 @@ export default class UserController {
       });
       return new UserModel(newUser).save();
     }
-    currentUser.username = user.username; // eslint-disable-line
+    currentUser.password = user.password; // eslint-disable-line
+    currentUser.entityId = locationId; // eslint-disable-line
     currentUser.updated = new Date(); // eslint-disable-line
     return currentUser.save();
   }
